@@ -25,9 +25,9 @@
           [ngModel]="apiKey()"
           (ngModelChange)="apiKey.set($event)"
           (input)="error.set('')"
-          [toggleMask]="true"
+          toggleMask="true"
           autocomplete="off"
-          [feedback]="false"
+          feedback="false"
           class="font-mono"
           fluid
         />
