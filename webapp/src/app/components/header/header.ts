@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, effect, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AvatarModule } from 'primeng/avatar';
@@ -22,13 +22,40 @@ import { ToolbarModule } from 'primeng/toolbar';
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
-export class Header {
+export class Header implements OnDestroy {
   protected drawerVisible = signal<boolean>(false);
-
   protected theme = signal<string>('system');
 
-  protected toggleDrawer() {
-    this.drawerVisible.update((value) => !value);
+  private isDarkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  private themeChangeListener = () => {
+    if (this.theme() === 'system') {
+      this.applyTheme();
+    }
+  };
+
+  constructor() {
+    const savedTheme = localStorage.getItem('relay-manager-theme') || 'system';
+
+    this.theme.set(savedTheme);
+
+    this.isDarkMediaQuery.addEventListener('change', this.themeChangeListener);
+
+    effect(() => {
+      localStorage.setItem('relay-manager-theme', this.theme());
+
+      this.applyTheme();
+    });
+  }
+
+  ngOnDestroy() {
+    this.isDarkMediaQuery.removeEventListener('change', this.themeChangeListener);
+  }
+
+  private applyTheme() {
+    (this.theme() === 'system' ? this.isDarkMediaQuery.matches : this.theme() === 'dark')
+      ? document.documentElement.classList.add('app-dark')
+      : document.documentElement.classList.remove('app-dark');
   }
 
   protected onThemeChange(theme: string) {

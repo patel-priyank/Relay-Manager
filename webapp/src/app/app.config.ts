@@ -33,6 +33,9 @@ export const appConfig: ApplicationConfig = {
             },
           },
         }),
+        options: {
+          darkModeSelector: '.app-dark',
+        },
       },
       ripple: true,
     }),
