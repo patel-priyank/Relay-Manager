@@ -48,6 +48,12 @@ export class Header implements OnDestroy {
 
       this.applyTheme();
     });
+
+    effect(() => {
+      this.drawerVisible()
+        ? document.documentElement.classList.add('overflow-hidden')
+        : document.documentElement.classList.remove('overflow-hidden');
+    });
   }
 
   ngOnDestroy() {
