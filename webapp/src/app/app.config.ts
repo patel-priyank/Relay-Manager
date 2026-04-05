@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 
 import { providePrimeNG } from 'primeng/config';
 
+import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
 
 import { apiInterceptor } from './interceptors/api.interceptor';
@@ -15,12 +16,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([apiInterceptor])),
     providePrimeNG({
       theme: {
-        preset: {
-          ...Aura,
+        preset: definePreset(Aura, {
           semantic: {
-            ...(Aura.semantic || {}),
             primary: {
-              ...(Aura.semantic?.primary || {}),
               50: '{blue.50}',
               100: '{blue.100}',
               200: '{blue.200}',
@@ -34,7 +32,7 @@ export const appConfig: ApplicationConfig = {
               950: '{blue.950}',
             },
           },
-        },
+        }),
       },
       ripple: true,
     }),
