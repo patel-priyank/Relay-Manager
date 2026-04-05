@@ -10,8 +10,6 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 
-import { Header } from '../../components/header/header';
-
 @Component({
   selector: 'app-setup',
   imports: [
@@ -22,7 +20,6 @@ import { Header } from '../../components/header/header';
     FloatLabel,
     MessageModule,
     PasswordModule,
-    Header,
   ],
   templateUrl: './setup.html',
   styleUrl: './setup.scss',

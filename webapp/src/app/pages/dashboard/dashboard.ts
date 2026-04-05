@@ -3,11 +3,9 @@ import { Router } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 
-import { Header } from '../../components/header/header';
-
 @Component({
   selector: 'app-dashboard',
-  imports: [ButtonModule, Header],
+  imports: [ButtonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
