@@ -1,0 +1,80 @@
+<div class="flex flex-col" [style]="{ minHeight: '100dvh' }">
+  <app-header />
+
+  <div class="flex-grow flex items-center justify-center">
+    <p-card class="m-4 overflow-hidden" [style]="{ maxWidth: '25rem' }">
+      <ng-template #header>
+        <div class="flex justify-center pt-5 px-5">
+          <p-avatar image="favicon.svg" size="xlarge" />
+        </div>
+      </ng-template>
+
+      <ng-template #title>
+        <div class="flex justify-center">
+          <p class="text-2xl font-bold">Relay Manager</p>
+        </div>
+      </ng-template>
+
+      <ng-template #subtitle>
+        <div class="flex justify-center">
+          <p>Manage your Firefox Relay aliases</p>
+        </div>
+      </ng-template>
+
+      <form (ngSubmit)="connect()" class="flex flex-col gap-4 mt-6 mb-2">
+        <p-floatlabel variant="in">
+          <p-password
+            name="apiKey"
+            [ngModel]="apiKey()"
+            (ngModelChange)="apiKey.set($event)"
+            (input)="error.set('')"
+            [toggleMask]="true"
+            autocomplete="off"
+            [feedback]="false"
+            fluid
+          />
+
+          <label>API Key</label>
+        </p-floatlabel>
+
+        <p-button
+          label="Connect"
+          fluid
+          icon="ph ph-link-simple"
+          [loading]="isLoading()"
+          [disabled]="!apiKey().trim()"
+          (click)="connect()"
+        />
+
+        @if (error()) {
+          <p-message severity="error" class="justify-center text-center">
+            <span class="inline-block" [style]="{ textWrap: 'balance' }">
+              {{ error() }}
+            </span>
+          </p-message>
+        }
+      </form>
+
+      <ng-template #footer>
+        <div class="flex flex-col gap-4">
+          <p class="text-center text-sm text-current/50" [style]="{ textWrap: 'balance' }">
+            Your API Key is stored locally in your browser and never sent anywhere except Firefox
+            Relay's API.
+          </p>
+
+          <a
+            pButton
+            href="https://relay.firefox.com/accounts/settings/"
+            target="_blank"
+            rel="noopener noreferrer"
+            size="small"
+            class="self-center"
+            severity="secondary"
+          >
+            <span pButtonLabel>Get your API Key</span>
+          </a>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
