@@ -12,76 +12,92 @@
       [rounded]="true"
       [outlined]="true"
       severity="secondary"
-      (click)="drawerVisible.update((visible) => !visible)"
+      (click)="toggleDrawer($event)"
     />
   </ng-template>
 </p-toolbar>
 
-<p-drawer header="Settings" [(visible)]="drawerVisible" position="right">
-  <div class="flex flex-col gap-4">
-    <p-panel header="Theme">
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-2 cursor-pointer">
-          <p-radiobutton
-            name="theme"
-            value="system"
-            [ngModel]="theme()"
-            (ngModelChange)="onThemeChange($event)"
-            inputId="system"
-          />
-          <label for="system" class="cursor-pointer flex-grow">System</label>
-        </div>
+<p-drawer #drawerRef [(visible)]="drawerVisible" position="right">
+  <ng-template #headless>
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between p-5">
+        <span class="text-2xl font-semibold">Settings</span>
 
-        <div class="flex items-center gap-2 cursor-pointer">
-          <p-radiobutton
-            name="theme"
-            value="light"
-            [ngModel]="theme()"
-            (ngModelChange)="onThemeChange($event)"
-            inputId="light"
-          />
-          <label for="light" class="cursor-pointer flex-grow">Light</label>
-        </div>
-
-        <div class="flex items-center gap-2 cursor-pointer">
-          <p-radiobutton
-            name="theme"
-            value="dark"
-            [ngModel]="theme()"
-            (ngModelChange)="onThemeChange($event)"
-            inputId="dark"
-          />
-          <label for="dark" class="cursor-pointer flex-grow">Dark</label>
-        </div>
+        <p-button
+          icon="ph ph-x"
+          [rounded]="true"
+          [outlined]="true"
+          severity="secondary"
+          (click)="toggleDrawer($event)"
+        />
       </div>
-    </p-panel>
 
-    <p-panel header="Source code">
-      <a
-        pButton
-        href="https://github.com/patel-priyank/Relay-Manager"
-        target="_blank"
-        rel="noopener noreferrer"
-        icon="ph ph-github-logo"
-        size="small"
-        severity="secondary"
-      >
-        <span pButtonLabel>GitHub</span>
-      </a>
-    </p-panel>
+      <div class="overflow-y-auto flex flex-col gap-4 px-5 pb-5">
+        <p-panel header="Theme">
+          <div class="flex flex-col gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <p-radiobutton
+                name="theme"
+                value="system"
+                [ngModel]="theme()"
+                (ngModelChange)="onThemeChange($event)"
+              />
 
-    <p-panel header="Support the project">
-      <a
-        pButton
-        href="https://buymeacoffee.com/priyankp"
-        target="_blank"
-        rel="noopener noreferrer"
-        icon="ph ph-coffee"
-        size="small"
-        severity="secondary"
-      >
-        <span pButtonLabel>Buy me a coffee</span>
-      </a>
-    </p-panel>
-  </div>
+              <span>System</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+              <p-radiobutton
+                name="theme"
+                value="light"
+                [ngModel]="theme()"
+                (ngModelChange)="onThemeChange($event)"
+              />
+
+              <span>Light</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+              <p-radiobutton
+                name="theme"
+                value="dark"
+                [ngModel]="theme()"
+                (ngModelChange)="onThemeChange($event)"
+              />
+
+              <span>Dark</span>
+            </label>
+          </div>
+        </p-panel>
+
+        <p-panel header="Source code">
+          <a
+            pButton
+            href="https://github.com/patel-priyank/Relay-Manager"
+            target="_blank"
+            rel="noopener noreferrer"
+            icon="ph ph-github-logo"
+            size="small"
+            severity="secondary"
+          >
+            <span pButtonLabel>GitHub</span>
+          </a>
+        </p-panel>
+
+        <p-panel header="Support the project">
+          <a
+            pButton
+            href="https://buymeacoffee.com/priyankp"
+            target="_blank"
+            rel="noopener noreferrer"
+            icon="ph ph-coffee"
+            size="small"
+            severity="secondary"
+          >
+            <span pButtonLabel>Buy me a coffee</span>
+          </a>
+        </p-panel>
+      </div>
+    </div>
+  </ng-template>
 </p-drawer>

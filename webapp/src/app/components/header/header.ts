@@ -1,9 +1,9 @@
-import { Component, effect, OnDestroy, signal } from '@angular/core';
+import { Component, effect, OnDestroy, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { DrawerModule } from 'primeng/drawer';
+import { Drawer, DrawerModule } from 'primeng/drawer';
 import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -23,6 +23,8 @@ import { ToolbarModule } from 'primeng/toolbar';
   styleUrl: './header.scss',
 })
 export class Header implements OnDestroy {
+  @ViewChild('drawerRef') drawerRef!: Drawer;
+
   protected drawerVisible = signal<boolean>(false);
   protected theme = signal<string>('system');
 
@@ -72,5 +74,13 @@ export class Header implements OnDestroy {
 
   protected onThemeChange(theme: string) {
     this.theme.set(theme);
+  }
+
+  protected toggleDrawer(event: Event) {
+    if (this.drawerVisible()) {
+      this.drawerRef.close(event);
+    } else {
+      this.drawerVisible.set(true);
+    }
   }
 }
