@@ -52,10 +52,22 @@ export class Header implements OnDestroy {
     this.isDarkMediaQuery.removeEventListener('change', this.themeChangeListener);
   }
 
+  private initialThemeApplied = false;
+
   private applyTheme() {
-    (this.theme() === 'system' ? this.isDarkMediaQuery.matches : this.theme() === 'dark')
-      ? document.documentElement.classList.add('app-dark')
-      : document.documentElement.classList.remove('app-dark');
+    const applyClasses = () => {
+      (this.theme() === 'system' ? this.isDarkMediaQuery.matches : this.theme() === 'dark')
+        ? document.documentElement.classList.add('app-dark')
+        : document.documentElement.classList.remove('app-dark');
+    };
+
+    if (this.initialThemeApplied && 'startViewTransition' in document) {
+      (document as any).startViewTransition(() => applyClasses());
+    } else {
+      applyClasses();
+
+      this.initialThemeApplied = true;
+    }
   }
 
   protected onThemeChange(theme: string) {
