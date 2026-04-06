@@ -1,5 +1,5 @@
-<div>
-  <p-card class="overflow-hidden" [style]="{ maxWidth: '25rem' }">
+<div class="h-full flex justify-center items-center">
+  <p-card class="overflow-hidden" [style]="{ maxWidth: '400px' }">
     <ng-template #header>
       <div class="flex justify-center pt-5 px-5">
         <p-avatar image="favicon.svg" size="xlarge" />
@@ -46,9 +46,9 @@
 
       @if (error()) {
         <p-message severity="error" class="justify-center text-center">
-          <span class="inline-block" [style]="{ textWrap: 'balance' }">
+          <p [style]="{ textWrap: 'balance' }">
             {{ error() }}
-          </span>
+          </p>
         </p-message>
       }
     </form>
