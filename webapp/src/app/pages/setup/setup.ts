@@ -6,21 +6,12 @@ import { Router } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { FloatLabel } from 'primeng/floatlabel';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 
 @Component({
   selector: 'app-setup',
-  imports: [
-    FormsModule,
-    AvatarModule,
-    ButtonModule,
-    CardModule,
-    FloatLabel,
-    MessageModule,
-    PasswordModule,
-  ],
+  imports: [FormsModule, AvatarModule, ButtonModule, CardModule, MessageModule, PasswordModule],
   templateUrl: './setup.html',
   styleUrl: './setup.scss',
 })

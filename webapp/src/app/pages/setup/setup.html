@@ -19,21 +19,18 @@
     </ng-template>
 
     <form (ngSubmit)="connect()" class="flex flex-col gap-4 mt-6 mb-2">
-      <p-floatlabel variant="on">
-        <p-password
-          name="apiKey"
-          [ngModel]="apiKey()"
-          (ngModelChange)="apiKey.set($event)"
-          (input)="error.set('')"
-          toggleMask
-          autocomplete="off"
-          feedback="false"
-          class="font-mono"
-          fluid
-        />
-
-        <label>API Key</label>
-      </p-floatlabel>
+      <p-password
+        name="apiKey"
+        placeholder="API Key"
+        [ngModel]="apiKey()"
+        (ngModelChange)="apiKey.set($event)"
+        (input)="error.set('')"
+        toggleMask
+        autocomplete="off"
+        feedback="false"
+        class="font-mono"
+        fluid
+      />
 
       <p-button
         label="Connect"
