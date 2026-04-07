@@ -2,7 +2,7 @@ import { Component, effect, OnDestroy, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AvatarModule } from 'primeng/avatar';
-import { ButtonModule } from 'primeng/button';
+import { Button, ButtonModule } from 'primeng/button';
 import { Drawer, DrawerModule } from 'primeng/drawer';
 import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -23,6 +23,8 @@ import { ToolbarModule } from 'primeng/toolbar';
   styleUrl: './header.scss',
 })
 export class Header implements OnDestroy {
+  @ViewChild('settingsBtnRef') settingsBtnRef!: Button;
+  @ViewChild('closeBtnRef') closeBtnRef!: Button;
   @ViewChild('drawerRef') drawerRef!: Drawer;
 
   protected drawerVisible = signal<boolean>(false);
@@ -88,5 +90,13 @@ export class Header implements OnDestroy {
     } else {
       this.drawerVisible.set(true);
     }
+  }
+
+  protected onDrawerShow() {
+    this.closeBtnRef.el.nativeElement.querySelector('button').focus();
+  }
+
+  protected onDrawerHide() {
+    this.settingsBtnRef.el.nativeElement.querySelector('button').focus();
   }
 }

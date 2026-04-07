@@ -16,6 +16,7 @@
 
   <ng-template #end>
     <p-button
+      #settingsBtnRef
       icon="ph ph-gear"
       rounded="true"
       outlined="true"
@@ -25,13 +26,21 @@
   </ng-template>
 </p-toolbar>
 
-<p-drawer #drawerRef [(visible)]="drawerVisible" position="right" appendTo="body">
+<p-drawer
+  #drawerRef
+  [(visible)]="drawerVisible"
+  position="right"
+  appendTo="body"
+  (onShow)="onDrawerShow()"
+  (onHide)="onDrawerHide()"
+>
   <ng-template #headless>
     <div class="flex flex-col h-full">
       <div class="flex items-center justify-between p-4">
         <span class="text-2xl font-semibold">Settings</span>
 
         <p-button
+          #closeBtnRef
           icon="ph ph-x"
           rounded="true"
           outlined="true"
