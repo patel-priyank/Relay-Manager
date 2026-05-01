@@ -1,4 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
+* {
+  --default-font-family: 'Archivo', var(--font-sans);
+  --default-transition-duration: 500ms;
+}
+
+.font-mono {
+  font-family: 'Source Code Pro', var(--font-mono);
+}
+
 router-outlet + * {
-  flex-grow: 1;
   width: 100%;
 }

@@ -1,21 +1,17 @@
 <div class="h-full flex justify-center items-center">
-  <p-card class="overflow-hidden" [style]="{ maxWidth: '400px' }">
+  <p-card class="overflow-hidden max-w-[400px]">
     <ng-template #header>
-      <div class="flex justify-center pt-6 px-5">
+      <div class="flex justify-center px-5 pt-6">
         <p-avatar image="favicon.svg" size="xlarge" />
       </div>
     </ng-template>
 
     <ng-template #title>
-      <div class="flex justify-center">
-        <p class="text-2xl font-bold">Relay Manager</p>
-      </div>
+      <p class="text-2xl font-bold text-center text-balance">Relay Manager</p>
     </ng-template>
 
     <ng-template #subtitle>
-      <div class="flex justify-center">
-        <p>Manage your Firefox Relay aliases</p>
-      </div>
+      <p class="text-center text-balance">Manage your Firefox Relay aliases</p>
     </ng-template>
 
     <form (ngSubmit)="connect()" class="flex flex-col gap-4 mt-6 mb-2">
@@ -42,8 +38,8 @@
       />
 
       @if (error()) {
-        <p-message severity="error" class="justify-center text-center">
-          <p [style]="{ textWrap: 'balance' }">
+        <p-message severity="error" class="justify-center">
+          <p class="text-center text-balance">
             {{ error() }}
           </p>
         </p-message>
@@ -52,7 +48,7 @@
 
     <ng-template #footer>
       <div class="flex flex-col gap-4">
-        <p class="text-center text-sm text-current/50" [style]="{ textWrap: 'balance' }">
+        <p class="text-center text-balance text-sm text-current/50">
           Your API Key is stored locally in your browser and never sent anywhere except Firefox
           Relay's API.
         </p>

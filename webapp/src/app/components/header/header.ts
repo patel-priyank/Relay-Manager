@@ -30,9 +30,9 @@ export class Header implements OnDestroy {
   protected drawerVisible = signal<boolean>(false);
   protected theme = signal<string>('system');
 
-  private isDarkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  private isSystemDarkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-  private themeChangeListener = () => {
+  private systemThemeChangeListener = () => {
     if (this.theme() === 'system') {
       this.applyTheme();
     }
@@ -43,7 +43,7 @@ export class Header implements OnDestroy {
 
     this.theme.set(savedTheme);
 
-    this.isDarkMediaQuery.addEventListener('change', this.themeChangeListener);
+    this.isSystemDarkMediaQuery.addEventListener('change', this.systemThemeChangeListener);
 
     effect(() => {
       localStorage.setItem('relay-manager-theme', this.theme());
@@ -53,14 +53,14 @@ export class Header implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.isDarkMediaQuery.removeEventListener('change', this.themeChangeListener);
+    this.isSystemDarkMediaQuery.removeEventListener('change', this.systemThemeChangeListener);
   }
 
   private initialThemeApplied = false;
 
   private applyTheme() {
     const applyClasses = () => {
-      (this.theme() === 'system' ? this.isDarkMediaQuery.matches : this.theme() === 'dark')
+      (this.theme() === 'system' ? this.isSystemDarkMediaQuery.matches : this.theme() === 'dark')
         ? document.documentElement.classList.add('app-dark')
         : document.documentElement.classList.remove('app-dark');
     };
