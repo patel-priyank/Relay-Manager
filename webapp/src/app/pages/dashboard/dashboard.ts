@@ -1,22 +1,46 @@
 import { Component, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
-import { PanelModule } from 'primeng/panel';
+import { Card } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { Divider } from 'primeng/divider';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { Panel } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [ButtonModule, PanelModule, SkeletonModule, TagModule],
+  imports: [
+    ButtonModule,
+    Card,
+    DatePipe,
+    DialogModule,
+    Divider,
+    FormsModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    Panel,
+    SkeletonModule,
+    TagModule,
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
   protected data = signal<any | null>(null);
+  protected emailDialogVisible = signal<boolean>(false);
+  protected dateSubscribedDialogVisible = signal<boolean>(false);
+  protected searchQuery = signal<string>('');
 
   private http = inject(HttpClient);
   private router = inject(Router);
@@ -40,7 +64,9 @@ export class Dashboard {
         this.data.set({
           email: res.user[0].email,
           profile: res.profile[0],
-          aliases: [...res.random, ...res.domain],
+          aliases: [...res.random, ...res.domain].sort((a, b) =>
+            a.description.toLowerCase().localeCompare(b.description.toLowerCase()),
+          ),
         });
       },
       error: (err: HttpErrorResponse) => {

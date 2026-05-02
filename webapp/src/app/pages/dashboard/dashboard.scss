@@ -1,0 +1,23 @@
+.btn-xs {
+  ::ng-deep .p-button {
+    height: 24px;
+    width: 24px;
+  }
+}
+
+.statistic-panel ::ng-deep {
+  .p-panel-content-container {
+    height: 100%;
+  }
+
+  .p-panel-content-wrapper {
+    overflow: hidden;
+  }
+
+  .p-panel-content {
+    padding: 12px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+  }
+}

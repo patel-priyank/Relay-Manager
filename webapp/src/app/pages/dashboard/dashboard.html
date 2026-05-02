@@ -1,49 +1,187 @@
-<div class="flex flex-col gap-4">
-  <p-panel>
-    <ng-template #header>
-      <div class="flex flex-col gap-1 w-full">
-        <span>Welcome,</span>
+<div class="flex flex-col gap-4 pb-25">
+  <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 justify-between">
+    <div class="sm:col-span-2 flex-1 flex flex-col items-start gap-4">
+      <div class="flex flex-col items-start gap-1 w-full">
+        <span class="text-current/50">Welcome,</span>
 
         @if (data()) {
-          <span class="text-xl font-semibold break-all line-clamp-2" title="{{ data().email }}">
-            {{ data().email }}
-          </span>
+          <div class="flex items-center gap-2 w-fit max-w-full">
+            <span class="text-xl font-semibold truncate">
+              {{ data().email }}
+            </span>
+
+            <p-button
+              icon="ph-bold ph-dots-three"
+              rounded
+              severity="secondary"
+              class="btn-xs flex"
+              (click)="emailDialogVisible.set(true)"
+            />
+
+            <p-dialog
+              header="Email"
+              [(visible)]="emailDialogVisible"
+              modal
+              draggable="false"
+              resizable="false"
+              dismissableMask
+              [style]="{ margin: '16px', width: '400px', maxWidth: '100%' }"
+            >
+              <ng-template #closeicon>
+                <p-button icon="ph ph-x" rounded severity="secondary" />
+              </ng-template>
+
+              <span class="break-all">{{ data().email }}</span>
+            </p-dialog>
+          </div>
         } @else {
           <p-skeleton height="28px" [style]="{ maxWidth: '320px' }" />
         }
       </div>
-    </ng-template>
 
-    @if (data()) {
-      <p-tag severity="success" value="{{ data().profile.has_premium ? 'Premium' : 'Free' }}">
-        <i
-          class="mr-0.5 ph {{ data().profile.has_premium ? 'ph-shield-star' : 'ph ph-shield' }}"
-        ></i>
-      </p-tag>
-    } @else {
-      <p-skeleton height="29px" width="80px" />
-    }
+      @if (data()) {
+        <div class="flex items-center gap-2">
+          <p-tag severity="success" value="{{ data().profile.has_premium ? 'Premium' : 'Free' }}" />
 
-    @if (data() && data().profile.subdomain) {
-      <div class="mt-4.5 flex flex-col gap-1 w-full">
-        <span>Your custom subdomain is</span>
+          @if (data().profile.has_premium) {
+            <p-button
+              icon="ph-bold ph-question-mark"
+              rounded
+              severity="secondary"
+              class="btn-xs flex"
+              (click)="dateSubscribedDialogVisible.set(true)"
+            />
 
-        <span
-          class="font-semibold break-all line-clamp-2"
-          title="@{{ data().profile.subdomain }}.mozmail.com"
-        >
-          @{{ data().profile.subdomain }}.mozmail.com
-        </span>
+            <p-dialog
+              header="Subscription Date"
+              [(visible)]="dateSubscribedDialogVisible"
+              modal
+              draggable="false"
+              resizable="false"
+              dismissableMask
+              [style]="{ margin: '16px', width: '400px', maxWidth: '100%' }"
+            >
+              <ng-template #closeicon>
+                <p-button icon="ph ph-x" rounded severity="secondary" />
+              </ng-template>
+
+              <span class="break-all">
+                {{ data().profile.date_subscribed | date: 'dd MMM yyyy' }}
+              </span>
+            </p-dialog>
+          }
+        </div>
+      } @else {
+        <p-skeleton height="29px" width="100px" />
+      }
+
+      <p-button label="Disconnect" icon="ph ph-link-simple-break" (click)="disconnect()" />
+    </div>
+
+    <div class="sm:col-span-3 grid grid-cols-2 gap-2">
+      <p-panel showHeader="false" class="statistic-panel">
+        <div class="flex flex-col gap-0.5 w-full">
+          @if (data()) {
+            <span class="text-xl font-bold">{{ data().profile.emails_blocked }}</span>
+          } @else {
+            <p-skeleton height="28px" width="80px" />
+          }
+
+          <span class="text-sm text-current/50 truncate">Emails blocked</span>
+        </div>
+      </p-panel>
+
+      <p-panel showHeader="false" class="statistic-panel">
+        <div class="flex flex-col gap-0.5 w-full">
+          @if (data()) {
+            <span class="text-xl font-bold">{{ data().profile.emails_forwarded }}</span>
+          } @else {
+            <p-skeleton height="28px" width="80px" />
+          }
+
+          <span class="text-sm text-current/50 truncate">Emails forwarded</span>
+        </div>
+      </p-panel>
+
+      <p-panel showHeader="false" class="statistic-panel">
+        <div class="flex flex-col gap-0.5 w-full">
+          @if (data()) {
+            <span class="text-xl font-bold">{{ data().profile.emails_replied }}</span>
+          } @else {
+            <p-skeleton height="28px" width="80px" />
+          }
+
+          <span class="text-sm text-current/50 truncate">Emails replied</span>
+        </div>
+      </p-panel>
+
+      <p-panel showHeader="false" class="statistic-panel">
+        <div class="flex flex-col gap-0.5 w-full">
+          @if (data()) {
+            <span class="text-xl font-bold">{{ data().profile.level_one_trackers_blocked }}</span>
+          } @else {
+            <p-skeleton height="28px" width="80px" />
+          }
+
+          <span class="text-sm text-current/50 truncate">Trackers blocked</span>
+        </div>
+      </p-panel>
+    </div>
+  </div>
+
+  <p-divider type="dashed" />
+
+  <div class="flex flex-col gap-4">
+    <div class="flex justify-between gap-2">
+      <p-iconfield class="flex-grow-1 max-w-sm">
+        <p-inputicon class="ph ph-magnifying-glass pointer-events-none" />
+
+        <input type="text" placeholder="Search" pInputText [(ngModel)]="searchQuery" fluid />
+
+        <p-inputicon
+          class="ph ph-x {{ searchQuery() ? 'cursor-pointer' : 'pointer-events-none opacity-0' }}"
+          (click)="searchQuery.set('')"
+        />
+      </p-iconfield>
+
+      <div class="flex gap-2">
+        <p-button icon="ph ph-arrows-down-up" severity="secondary" />
+
+        <p-button icon="ph ph-funnel" severity="secondary" />
       </div>
-    }
+    </div>
 
-    <ng-template #footer>
-      <p-button
-        label="Disconnect"
-        size="small"
-        icon="ph ph-link-simple-break"
-        (click)="disconnect()"
-      />
-    </ng-template>
-  </p-panel>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      @if (data()) {
+        @for (alias of data().aliases; track alias) {
+          <p-card>
+            <div class="grid grid-rows-subgrid row-span-4 gap-4">
+              <div class="flex items-center gap-4 justify-between">
+                <span class="italic capitalize">{{ alias.mask_type }}</span>
+
+                <!-- <div class="flex items-center gap-2">
+                  <p-button icon="ph ph-copy" rounded size="small" />
+                  <p-button icon="ph ph-trash" rounded size="small" severity="danger" />
+                </div> -->
+              </div>
+
+              <h3
+                class="text-lg py-1.75  {{
+                  alias.description ? 'font-bold' : 'text-current/50 italic'
+                }}"
+              >
+                {{ alias.description || 'Description' }}
+              </h3>
+
+              <span>{{ alias.full_address }}</span>
+            </div>
+          </p-card>
+        }
+      } @else {
+        @for (item of [1, 2, 3, 4, 5]; track item) {
+          <span>Loading...</span>
+        }
+      }
+    </div>
+  </div>
 </div>
