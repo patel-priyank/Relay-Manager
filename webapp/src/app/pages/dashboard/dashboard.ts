@@ -38,8 +38,8 @@ import { TagModule } from 'primeng/tag';
 })
 export class Dashboard {
   protected data = signal<any | null>(null);
-  protected emailDialogVisible = signal<boolean>(false);
-  protected dateSubscribedDialogVisible = signal<boolean>(false);
+  protected profileDialogVisible = signal<boolean>(false);
+  protected subscriptionDialogVisible = signal<boolean>(false);
   protected searchQuery = signal<string>('');
 
   private http = inject(HttpClient);

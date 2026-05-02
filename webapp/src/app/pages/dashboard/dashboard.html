@@ -11,16 +11,16 @@
             </span>
 
             <p-button
-              icon="ph-bold ph-dots-three"
+              icon="ph ph-caret-right"
               rounded
               severity="secondary"
               class="btn-xs flex"
-              (click)="emailDialogVisible.set(true)"
+              (click)="profileDialogVisible.set(true)"
             />
 
             <p-dialog
-              header="Email"
-              [(visible)]="emailDialogVisible"
+              header="Profile"
+              [(visible)]="profileDialogVisible"
               modal
               draggable="false"
               resizable="false"
@@ -31,7 +31,17 @@
                 <p-button icon="ph ph-x" rounded severity="secondary" />
               </ng-template>
 
-              <span class="break-all">{{ data().email }}</span>
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-1">
+                  <span class="text-sm font-medium">Email</span>
+                  <span class="break-all text-current/50">{{ data().email }}</span>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                  <span class="text-sm font-medium">API Key</span>
+                  <span class="break-all text-current/50">{{ data().profile.api_token }}</span>
+                </div>
+              </div>
             </p-dialog>
           </div>
         } @else {
@@ -45,16 +55,16 @@
 
           @if (data().profile.has_premium) {
             <p-button
-              icon="ph-bold ph-question-mark"
+              icon="ph ph-question-mark"
               rounded
               severity="secondary"
               class="btn-xs flex"
-              (click)="dateSubscribedDialogVisible.set(true)"
+              (click)="subscriptionDialogVisible.set(true)"
             />
 
             <p-dialog
-              header="Subscription Date"
-              [(visible)]="dateSubscribedDialogVisible"
+              header="Subscription"
+              [(visible)]="subscriptionDialogVisible"
               modal
               draggable="false"
               resizable="false"
@@ -65,9 +75,14 @@
                 <p-button icon="ph ph-x" rounded severity="secondary" />
               </ng-template>
 
-              <span class="break-all">
-                {{ data().profile.date_subscribed | date: 'dd MMM yyyy' }}
-              </span>
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-1">
+                  <span class="text-sm font-medium">Subscribed on</span>
+                  <span class="break-all text-current/50">
+                    {{ data().profile.date_subscribed | date: 'dd MMM yyyy' }}
+                  </span>
+                </div>
+              </div>
             </p-dialog>
           }
         </div>
@@ -133,7 +148,7 @@
 
   <div class="flex flex-col gap-4">
     <div class="flex justify-between gap-2">
-      <p-iconfield class="flex-grow-1 max-w-sm">
+      <p-iconfield class="flex-grow-1 max-w-xs">
         <p-inputicon class="ph ph-magnifying-glass pointer-events-none" />
 
         <input type="text" placeholder="Search" pInputText [(ngModel)]="searchQuery" fluid />
