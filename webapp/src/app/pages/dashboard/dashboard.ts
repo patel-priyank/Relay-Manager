@@ -47,19 +47,19 @@ export class Dashboard {
   private router = inject(Router);
 
   constructor() {
-    const savedAPIKey = localStorage.getItem('relay-manager-api-key');
+    const savedApiKey = localStorage.getItem('relay-manager-api-key');
 
-    if (!savedAPIKey) {
+    if (!savedApiKey) {
       this.router.navigate(['/setup']);
 
       return;
     }
 
     forkJoin({
-      random: this.http.get<any>(`/api/random?token=${savedAPIKey}`),
-      domain: this.http.get<any>(`/api/domain?token=${savedAPIKey}`),
-      profile: this.http.get<any>(`/api/account/profile?token=${savedAPIKey}`),
-      user: this.http.get<any>(`/api/account/user?token=${savedAPIKey}`),
+      random: this.http.get<any>(`/api/random?token=${savedApiKey}`),
+      domain: this.http.get<any>(`/api/domain?token=${savedApiKey}`),
+      profile: this.http.get<any>(`/api/account/profile?token=${savedApiKey}`),
+      user: this.http.get<any>(`/api/account/user?token=${savedApiKey}`),
     }).subscribe({
       next: (res) => {
         this.data.set({

@@ -24,9 +24,9 @@ export class Setup {
   private router = inject(Router);
 
   constructor() {
-    const savedAPIKey = localStorage.getItem('relay-manager-api-key');
+    const savedApiKey = localStorage.getItem('relay-manager-api-key');
 
-    if (savedAPIKey) {
+    if (savedApiKey) {
       this.router.navigate(['/dashboard']);
     }
   }
