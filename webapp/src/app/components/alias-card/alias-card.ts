@@ -86,7 +86,7 @@ export class AliasCard {
     this.onShowMessage.emit({
       success: true,
       title: 'Success',
-      message: 'Copied to clipboard',
+      message: `Copied ${this.alias().full_address} to clipboard`,
     });
   }
 
@@ -109,7 +109,7 @@ export class AliasCard {
       this.onShowMessage.emit({
         success: false,
         title: 'Error',
-        message: 'Promotions level available only to Relay Premium subscribers',
+        message: 'Promotions blocking level is only available for Relay Premium subscribers',
       });
 
       this.blockingLevel.set(blockingLevel);
@@ -167,7 +167,7 @@ export class AliasCard {
         this.onShowMessage.emit({
           success: true,
           title: 'Success',
-          message: 'Blocking level updated',
+          message: `Blocking level updated to ${this.blockingLevels().find((level) => level.value === blockingLevel)?.longLabel} for ${this.alias().full_address}`,
         });
       },
       error: (_err: HttpErrorResponse) => {
@@ -178,7 +178,7 @@ export class AliasCard {
         this.onShowMessage.emit({
           success: false,
           title: 'Error',
-          message: 'Blocking level could not be updated',
+          message: `Blocking level could not be updated for ${this.alias().full_address}`,
         });
       },
     });
