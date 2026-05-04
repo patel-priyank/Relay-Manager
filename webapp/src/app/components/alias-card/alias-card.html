@@ -20,7 +20,7 @@
         </div>
       </div>
     } @else {
-      <p-skeleton height="35px" width="100px" />
+      <p-skeleton height="35px" width="25%" />
     }
 
     @if (alias()) {
@@ -46,7 +46,7 @@
         <p-button icon="ph ph-copy" severity="secondary" size="small" (click)="copyAlias()" />
       </div>
     } @else {
-      <p-skeleton height="35px" [style]="{ maxWidth: '320px' }" />
+      <p-skeleton height="35px" width="75%" />
     }
 
     <div class="mt-2">
