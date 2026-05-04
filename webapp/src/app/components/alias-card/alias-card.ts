@@ -35,16 +35,16 @@ export class AliasCard {
   protected blockingLevels = computed(() => [
     {
       value: 'none',
-      btnLabel: 'None',
-      textLabel: 'None',
+      label: 'None',
+      longLabel: 'None',
       description: 'All emails sent to this alias will be forwarded to your real address.',
       disabled: false,
       learnMore: false,
     },
     {
       value: 'promo',
-      btnLabel: 'Promo',
-      textLabel: 'Promotions',
+      label: 'Promo',
+      longLabel: 'Promotions',
       description:
         'Firefox Relay will attempt to block promotional emails while still forwarding emails like receipts and shipping information.',
       disabled: !this.premiumUser(),
@@ -52,8 +52,8 @@ export class AliasCard {
     },
     {
       value: 'all',
-      btnLabel: 'All',
-      textLabel: 'All',
+      label: 'All',
+      longLabel: 'All',
       description: 'Firefox Relay is blocking all emails sent to this alias.',
       disabled: false,
       learnMore: false,
