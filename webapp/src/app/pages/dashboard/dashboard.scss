@@ -1,5 +1,5 @@
-.btn-xs {
-  ::ng-deep .p-button {
+.btn-xs ::ng-deep {
+  .p-button {
     height: 24px;
     width: 24px;
   }

@@ -11,10 +11,10 @@ import { ToolbarModule } from 'primeng/toolbar';
 @Component({
   selector: 'app-header',
   imports: [
-    FormsModule,
     AvatarModule,
     ButtonModule,
     DrawerModule,
+    FormsModule,
     PanelModule,
     RadioButtonModule,
     ToolbarModule,

@@ -1,0 +1,183 @@
+<p-card>
+  <div class="flex flex-col gap-3">
+    @if (alias()) {
+      <div class="flex items-center justify-between gap-2 w-full">
+        <p-tag
+          [severity]="alias().mask_type === 'random' ? 'info' : 'success'"
+          value="{{ alias().mask_type }}"
+          class="capitalize"
+        />
+
+        <div class="flex items-center gap-2">
+          <p-button
+            icon="ph ph-info"
+            severity="secondary"
+            size="small"
+            outlined
+            (click)="aliasDialogVisible.set(true)"
+          />
+
+          <p-button icon="ph ph-trash" severity="danger" size="small" outlined />
+        </div>
+      </div>
+    } @else {
+      <p-skeleton height="35px" width="100px" />
+    }
+
+    @if (alias()) {
+      <form (ngSubmit)="updateDescription()" class="flex items-center justify-between gap-2 w-full">
+        <h3
+          class="text-lg py-1.75 truncate {{
+            alias().description ? 'font-bold' : 'text-current/50 italic'
+          }}"
+        >
+          {{ alias().description || 'Untitled' }}
+        </h3>
+
+        <p-button icon="ph ph-pencil" severity="secondary" size="small" outlined />
+      </form>
+    } @else {
+      <p-skeleton height="42px" />
+    }
+
+    @if (alias()) {
+      <div class="flex items-center justify-between gap-2 w-full">
+        <span class="truncate">{{ alias().full_address }}</span>
+
+        @if (aliasCopied()) {
+          <p-button
+            icon="ph ph-check"
+            severity="success"
+            size="small"
+            text
+            class="pointer-events-none"
+          />
+        } @else {
+          <p-button
+            icon="ph ph-copy"
+            severity="secondary"
+            size="small"
+            outlined
+            (click)="copyAlias()"
+          />
+        }
+      </div>
+    } @else {
+      <p-skeleton height="35px" [style]="{ maxWidth: '320px' }" />
+    }
+
+    <p-selectbutton
+      [options]="blockingLevels()"
+      optionLabel="name"
+      optionValue="value"
+      optionDisabled="disabled"
+      allowEmpty="false"
+      unselectable="true"
+      fluid
+      size="small"
+      disabled="{{ !alias() }}"
+      class="mt-2"
+    />
+  </div>
+</p-card>
+
+@if (alias()) {
+  <p-dialog
+    header="Alias"
+    [(visible)]="aliasDialogVisible"
+    modal
+    draggable="false"
+    resizable="false"
+    dismissableMask
+    [style]="{ margin: '16px', width: '400px', maxWidth: '100%' }"
+  >
+    <ng-template #closeicon>
+      <p-button icon="ph ph-x" rounded severity="secondary" />
+    </ng-template>
+
+    <div class="flex flex-col gap-6">
+      <div class="flex flex-col gap-0.5">
+        <span>Description</span>
+        <span
+          class="break-all {{ alias().description ? 'font-medium' : 'text-current/50 italic' }}"
+        >
+          {{ alias().description || 'Untitled' }}
+        </span>
+      </div>
+
+      <div class="flex flex-col gap-0.5">
+        <span>Alias</span>
+        <span class="break-all font-medium">{{ alias().full_address }}</span>
+      </div>
+
+      <div class="flex flex-col gap-0.5">
+        <span>Blocked emails</span>
+        <span class="break-all font-medium">
+          {{ alias().enabled ? (alias().block_list_emails ? 'Promotions' : 'None') : 'All' }}
+        </span>
+
+        <p-message severity="secondary" class="alias-message mt-2">
+          <div class="flex flex-col items-start gap-3">
+            <p class="font-normal">
+              {{
+                alias().enabled
+                  ? alias().block_list_emails
+                    ? 'Firefox Relay will attempt to block promotional emails while still forwarding emails like receipts and shipping information.'
+                    : 'Firefox Relay is blocking all emails sent to this alias.'
+                  : 'All emails sent to this alias will be forwarded to your real address.'
+              }}
+            </p>
+
+            @if (alias().enabled && alias().block_list_emails) {
+              <a
+                pButton
+                href="https://relay.firefox.com/faq/#faq-promotional-email-blocking"
+                target="_blank"
+                rel="noopener noreferrer"
+                size="small"
+              >
+                <span pButtonLabel>Learn more</span>
+              </a>
+            }
+          </div>
+        </p-message>
+      </div>
+
+      <p-divider type="dotted" [style]="{ margin: '0px' }" />
+
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center justify-between gap-4">
+          <span>Emails blocked</span>
+          <span class="font-medium">{{ alias().num_blocked }}</span>
+        </div>
+
+        <div class="flex items-center justify-between gap-4">
+          <span>Emails forwarded</span>
+          <span class="font-medium">{{ alias().num_forwarded }}</span>
+        </div>
+
+        <div class="flex items-center justify-between gap-4">
+          <span>Emails replied</span>
+          <span class="font-medium">{{ alias().num_replied }}</span>
+        </div>
+
+        <div class="flex items-center justify-between gap-4">
+          <span>Trackers blocked</span>
+          <span class="font-medium">{{ alias().num_level_one_trackers_blocked }}</span>
+        </div>
+
+        <div class="flex items-center justify-between gap-4">
+          <span>Created</span>
+          <span class="font-medium">{{ alias().created_at | date: 'dd MMM yyyy' }}</span>
+        </div>
+
+        <div class="flex items-center justify-between gap-4">
+          <span>Last used</span>
+          <span class="{{ alias().last_used_at ? 'font-medium' : 'text-current/50 italic' }}">
+            {{ alias().last_used_at ? (alias().last_used_at | date: 'dd MMM yyyy') : 'Never' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+}

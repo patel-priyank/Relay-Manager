@@ -7,29 +7,30 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
-import { Card } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { Divider } from 'primeng/divider';
+import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { Panel } from 'primeng/panel';
+import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
+
+import { AliasCard } from '../../components/alias-card/alias-card';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
+    AliasCard,
     ButtonModule,
-    Card,
     DatePipe,
     DialogModule,
-    Divider,
+    DividerModule,
     FormsModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    Panel,
+    PanelModule,
     SkeletonModule,
     TagModule,
   ],

@@ -11,7 +11,7 @@ import { PasswordModule } from 'primeng/password';
 
 @Component({
   selector: 'app-setup',
-  imports: [FormsModule, AvatarModule, ButtonModule, CardModule, MessageModule, PasswordModule],
+  imports: [AvatarModule, ButtonModule, CardModule, FormsModule, MessageModule, PasswordModule],
   templateUrl: './setup.html',
   styleUrl: './setup.scss',
 })
@@ -37,7 +37,7 @@ export class Setup {
     this.isLoading.set(true);
     this.error.set('');
 
-    this.http.get(`/api/account/profile?token=${this.apiKey()}`).subscribe({
+    this.http.get(`/api/account/user?token=${this.apiKey()}`).subscribe({
       next: (_res: any) => {
         this.isLoading.set(false);
 
