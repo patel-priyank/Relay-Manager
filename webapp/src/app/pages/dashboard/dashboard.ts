@@ -56,7 +56,7 @@ export class Dashboard {
     const savedApiKey = localStorage.getItem('relay-manager-api-key');
 
     if (!savedApiKey) {
-      this.router.navigate(['/setup']);
+      this.router.navigate(['/']);
 
       return;
     }
@@ -76,8 +76,8 @@ export class Dashboard {
           ),
         });
       },
-      error: (err: HttpErrorResponse) => {
-        console.log('Error fetching data:', err);
+      error: (_err: HttpErrorResponse) => {
+        this.disconnect();
       },
     });
   }
@@ -85,13 +85,13 @@ export class Dashboard {
   protected disconnect() {
     localStorage.removeItem('relay-manager-api-key');
 
-    this.router.navigate(['/setup']);
+    this.router.navigate(['/']);
   }
 
   protected updateAlias(alias: any) {
-    this.data.update((currentData) => ({
-      ...currentData,
-      aliases: currentData.aliases.map((a: any) => (a.id === alias.id ? { ...a, ...alias } : a)),
+    this.data.update((data) => ({
+      ...data,
+      aliases: data.aliases.map((a: any) => (a.id === alias.id ? { ...a, ...alias } : a)),
     }));
   }
 

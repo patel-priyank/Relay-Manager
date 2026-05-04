@@ -26,7 +26,7 @@
     @if (alias()) {
       <form (ngSubmit)="updateDescription()" class="flex items-center justify-between gap-2">
         <h3
-          class="text-lg py-1.75 truncate {{
+          class="text-lg py-1.75 pr-0.5 truncate {{
             alias().description ? 'font-bold' : 'text-current/50 italic'
           }}"
         >
