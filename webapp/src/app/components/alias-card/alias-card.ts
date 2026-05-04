@@ -1,5 +1,6 @@
-import { Component, computed, effect, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -30,7 +31,10 @@ import { TagModule } from 'primeng/tag';
 })
 export class AliasCard {
   alias = input<any | undefined>(undefined);
-  premiumUser = input<boolean>(false);
+  isPremiumUser = input<boolean>(false);
+
+  onUpdateAlias = output<any>();
+  onShowMessage = output<{ success: boolean; title: string; message: string }>();
 
   protected blockingLevels = computed(() => [
     {
@@ -47,7 +51,7 @@ export class AliasCard {
       longLabel: 'Promotions',
       description:
         'Firefox Relay will attempt to block promotional emails while still forwarding emails like receipts and shipping information.',
-      disabled: !this.premiumUser(),
+      disabled: !this.isPremiumUser(),
       learnMore: true,
     },
     {
@@ -61,8 +65,10 @@ export class AliasCard {
   ]);
 
   protected aliasDialogVisible = signal<boolean>(false);
-  protected aliasCopied = signal<boolean>(false);
   protected blockingLevel = signal<string | undefined>(undefined);
+  protected isSavingBlockingLevel = signal<boolean>(false);
+
+  private http = inject(HttpClient);
 
   constructor() {
     effect(() => {
@@ -89,14 +95,74 @@ export class AliasCard {
   protected copyAlias() {
     navigator.clipboard.writeText(this.alias().full_address);
 
-    this.aliasCopied.set(true);
-
-    setTimeout(() => {
-      this.aliasCopied.set(false);
-    }, 1500);
+    this.onShowMessage.emit({
+      success: true,
+      title: 'Success',
+      message: 'Copied to clipboard',
+    });
   }
 
-  protected updateBlockingLevel() {
-    console.log('updateBlockingLevel() called');
+  protected updateBlockingLevel(blockingLevel: string) {
+    const apiKey = localStorage.getItem('relay-manager-api-key');
+
+    if (!this.alias()) return;
+    if (!apiKey) return;
+
+    let maskType = '';
+    let body = {
+      enabled: this.alias().enabled,
+      block_list_emails: this.alias().block_list_emails,
+    };
+
+    switch (this.alias().mask_type) {
+      case 'random':
+        maskType = 'random';
+        break;
+
+      case 'custom':
+        maskType = 'domain';
+        break;
+    }
+
+    switch (blockingLevel) {
+      case 'none':
+        body = { enabled: true, block_list_emails: false };
+        break;
+
+      case 'promo':
+        body = { enabled: true, block_list_emails: true };
+        break;
+
+      case 'all':
+        body = { enabled: false, block_list_emails: false };
+        break;
+    }
+
+    this.blockingLevel.set(blockingLevel);
+
+    this.isSavingBlockingLevel.set(true);
+
+    this.http.patch(`/api/${maskType}/${this.alias().id}?token=${apiKey}`, body).subscribe({
+      next: (res: any) => {
+        this.isSavingBlockingLevel.set(false);
+
+        this.onUpdateAlias.emit(res);
+
+        this.onShowMessage.emit({
+          success: true,
+          title: 'Success',
+          message: 'Blocking level updated',
+        });
+      },
+      error: (_err: HttpErrorResponse) => {
+        this.isSavingBlockingLevel.set(false);
+
+        this.onShowMessage.emit({
+          success: false,
+          title: 'Error',
+          message: 'Blocking level could not be updated',
+        });
+      },
+    });
   }
 }

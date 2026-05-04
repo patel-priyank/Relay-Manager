@@ -15,6 +15,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
+
+import { MessageService } from 'primeng/api';
 
 import { AliasCard } from '../../components/alias-card/alias-card';
 
@@ -33,9 +36,11 @@ import { AliasCard } from '../../components/alias-card/alias-card';
     PanelModule,
     SkeletonModule,
     TagModule,
+    ToastModule,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
+  providers: [MessageService],
 })
 export class Dashboard {
   protected data = signal<any | null>(null);
@@ -44,6 +49,7 @@ export class Dashboard {
   protected searchQuery = signal<string>('');
 
   private http = inject(HttpClient);
+  private messageService = inject(MessageService);
   private router = inject(Router);
 
   constructor() {
@@ -80,5 +86,22 @@ export class Dashboard {
     localStorage.removeItem('relay-manager-api-key');
 
     this.router.navigate(['/setup']);
+  }
+
+  protected updateAlias(alias: any) {
+    this.data.update((currentData) => ({
+      ...currentData,
+      aliases: currentData.aliases.map((a: any) => (a.id === alias.id ? { ...a, ...alias } : a)),
+    }));
+  }
+
+  protected showMessage(message: { success: boolean; title: string; message: string }) {
+    this.messageService.clear();
+
+    this.messageService.add({
+      severity: message.success ? 'success' : 'error',
+      summary: message.title,
+      detail: message.message,
+    });
   }
 }

@@ -13,11 +13,10 @@
             icon="ph ph-info"
             severity="secondary"
             size="small"
-            outlined
             (click)="aliasDialogVisible.set(true)"
           />
 
-          <p-button icon="ph ph-trash" severity="danger" size="small" outlined />
+          <p-button icon="ph ph-trash" severity="danger" size="small" />
         </div>
       </div>
     } @else {
@@ -34,7 +33,7 @@
           {{ alias().description || 'Untitled' }}
         </h3>
 
-        <p-button icon="ph ph-pencil" severity="secondary" size="small" outlined />
+        <p-button icon="ph ph-pencil" severity="secondary" size="small" />
       </form>
     } @else {
       <p-skeleton height="42px" />
@@ -44,39 +43,35 @@
       <div class="flex items-center justify-between gap-2">
         <span class="truncate">{{ alias().full_address }}</span>
 
-        @if (aliasCopied()) {
-          <p-button
-            icon="ph ph-check"
-            severity="success"
-            size="small"
-            text
-            class="pointer-events-none"
-          />
-        } @else {
-          <p-button
-            icon="ph ph-copy"
-            severity="secondary"
-            size="small"
-            outlined
-            (click)="copyAlias()"
-          />
-        }
+        <p-button icon="ph ph-copy" severity="secondary" size="small" (click)="copyAlias()" />
       </div>
     } @else {
       <p-skeleton height="35px" [style]="{ maxWidth: '320px' }" />
     }
 
-    <p-selectbutton
-      [options]="blockingLevels()"
-      optionValue="value"
-      optionLabel="label"
-      optionDisabled="disabled"
-      allowEmpty="false"
-      fluid
-      [(ngModel)]="blockingLevel"
-      [disabled]="!alias()"
-      class="mt-2"
-    />
+    <div class="mt-2">
+      <p-selectbutton
+        [options]="blockingLevels()"
+        optionValue="value"
+        optionLabel="label"
+        optionDisabled="disabled"
+        allowEmpty="false"
+        fluid
+        [ngModel]="blockingLevel()"
+        (ngModelChange)="updateBlockingLevel($event)"
+        [disabled]="!alias() || isSavingBlockingLevel()"
+      >
+        <ng-template #item let-item>
+          @if (item.value === blockingLevel() && isSavingBlockingLevel()) {
+            <span class="flex text-2xl">
+              <i class="ph ph-circle-notch animate-spin"></i>
+            </span>
+          } @else {
+            <span>{{ item.label }}</span>
+          }
+        </ng-template>
+      </p-selectbutton>
+    </div>
   </div>
 </p-card>
 

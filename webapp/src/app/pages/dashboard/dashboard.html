@@ -119,8 +119,13 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       @if (data()) {
-        @for (alias of data().aliases; track alias) {
-          <app-alias-card [alias]="alias" [premiumUser]="data().profile.has_premium" />
+        @for (alias of data().aliases; track alias.id) {
+          <app-alias-card
+            [alias]="alias"
+            [isPremiumUser]="data().profile.has_premium"
+            (onUpdateAlias)="updateAlias($event)"
+            (onShowMessage)="showMessage($event)"
+          />
         }
       } @else {
         @for (item of [1, 2, 3, 4, 5, 6]; track item) {
@@ -130,6 +135,8 @@
     </div>
   </div>
 </div>
+
+<p-toast class="max-w-[calc(100%-40px)]" />
 
 @if (data()) {
   <p-dialog
