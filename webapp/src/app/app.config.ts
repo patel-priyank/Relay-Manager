@@ -37,7 +37,6 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: '.app-dark',
         },
       },
-      ripple: true,
     }),
     provideRouter(routes),
   ],
