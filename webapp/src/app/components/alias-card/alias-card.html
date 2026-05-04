@@ -68,14 +68,13 @@
 
     <p-selectbutton
       [options]="blockingLevels()"
-      optionLabel="name"
       optionValue="value"
+      optionLabel="btnLabel"
       optionDisabled="disabled"
       allowEmpty="false"
-      unselectable="true"
       fluid
-      size="small"
-      disabled="{{ !alias() }}"
+      [(ngModel)]="blockingLevel"
+      [disabled]="!alias()"
       class="mt-2"
     />
   </div>
@@ -113,22 +112,16 @@
       <div class="flex flex-col gap-0.5">
         <span>Blocked emails</span>
         <span class="break-all font-medium">
-          {{ alias().enabled ? (alias().block_list_emails ? 'Promotions' : 'None') : 'All' }}
+          {{ blockingLevels().find(level => level.value === blockingLevel())?.textLabel }}
         </span>
 
         <p-message severity="secondary" class="alias-message mt-2">
           <div class="flex flex-col items-start gap-3">
             <p class="font-normal">
-              {{
-                alias().enabled
-                  ? alias().block_list_emails
-                    ? 'Firefox Relay will attempt to block promotional emails while still forwarding emails like receipts and shipping information.'
-                    : 'Firefox Relay is blocking all emails sent to this alias.'
-                  : 'All emails sent to this alias will be forwarded to your real address.'
-              }}
+              {{ blockingLevels().find(level => level.value === blockingLevel())?.description }}
             </p>
 
-            @if (alias().enabled && alias().block_list_emails) {
+            @if (blockingLevels().find(level => level.value === blockingLevel())?.learnMore) {
               <a
                 pButton
                 href="https://relay.firefox.com/faq/#faq-promotional-email-blocking"
