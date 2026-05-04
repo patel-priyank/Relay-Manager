@@ -72,19 +72,7 @@ export class AliasCard {
 
   constructor() {
     effect(() => {
-      const alias = this.alias();
-
-      if (alias) {
-        if (alias.enabled) {
-          if (alias.block_list_emails) {
-            this.blockingLevel.set('promo');
-          } else {
-            this.blockingLevel.set('none');
-          }
-        } else {
-          this.blockingLevel.set('all');
-        }
-      }
+      this.setBlockingLevel();
     });
   }
 
@@ -102,7 +90,35 @@ export class AliasCard {
     });
   }
 
+  private setBlockingLevel() {
+    if (!this.alias()) return;
+
+    if (this.alias().enabled) {
+      if (this.alias().block_list_emails) {
+        this.blockingLevel.set('promo');
+      } else {
+        this.blockingLevel.set('none');
+      }
+    } else {
+      this.blockingLevel.set('all');
+    }
+  }
+
   protected updateBlockingLevel(blockingLevel: string) {
+    if (!this.isPremiumUser() && blockingLevel === 'promo') {
+      this.onShowMessage.emit({
+        success: false,
+        title: 'Error',
+        message: 'Promotions level available only to Relay Premium subscribers',
+      });
+
+      this.blockingLevel.set(blockingLevel);
+
+      setTimeout(() => this.setBlockingLevel());
+
+      return;
+    }
+
     const apiKey = localStorage.getItem('relay-manager-api-key');
 
     if (!this.alias()) return;
@@ -156,6 +172,8 @@ export class AliasCard {
       },
       error: (_err: HttpErrorResponse) => {
         this.isSavingBlockingLevel.set(false);
+
+        this.setBlockingLevel();
 
         this.onShowMessage.emit({
           success: false,
