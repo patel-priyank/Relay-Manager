@@ -129,7 +129,6 @@
           optionLabel="label"
           [ngModel]="sortValue()"
           (ngModelChange)="onSortChange($event)"
-          [filter]="false"
           [disabled]="!data()"
           scrollHeight="300px"
           class="w-full"
@@ -148,10 +147,9 @@
           [options]="filterOptions()"
           [ngModel]="filterValue()"
           (ngModelChange)="onFilterChange($event)"
-          [filter]="false"
           [disabled]="!data()"
           scrollHeight="300px"
-          class="w-full"
+          class="filter-dropdown w-full"
         />
       </div>
     </div>
