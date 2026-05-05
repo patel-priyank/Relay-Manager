@@ -94,7 +94,7 @@ export class Dashboard implements AfterViewInit {
       .map((group) => {
         const count = group.items.filter((item) => selected.includes(item.value)).length;
 
-        return `${count} ${group.shortLabel}${count === 1 ? '' : 's'}`;
+        return `${group.shortLabel}: ${count} of ${group.items.length}`;
       })
       .join(', ');
   });

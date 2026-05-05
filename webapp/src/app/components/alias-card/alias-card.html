@@ -10,17 +10,18 @@
 
         <div class="flex items-center gap-2">
           <p-button
+            label="Delete"
+            severity="danger"
+            size="small"
+            text
+            (click)="isDeleteAliasDialogVisible.set(true)"
+          />
+
+          <p-button
             icon="ph ph-info"
             severity="secondary"
             size="small"
             (click)="isAliasDialogVisible.set(true)"
-          />
-
-          <p-button
-            icon="ph ph-trash"
-            severity="danger"
-            size="small"
-            (click)="isDeleteAliasDialogVisible.set(true)"
           />
         </div>
       </div>
