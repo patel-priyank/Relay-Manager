@@ -11,6 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { PanelModule } from 'primeng/panel';
 import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -32,6 +33,7 @@ import { AliasCard } from '../../components/alias-card/alias-card';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
+    MultiSelectModule,
     PanelModule,
     SelectModule,
     SkeletonModule,
@@ -58,7 +60,30 @@ export class Dashboard {
     { value: 'last-used-desc', label: 'Last used (Oldest first)' },
   ];
 
+  protected filterOptions = signal([
+    {
+      label: 'Alias type',
+      items: [
+        { label: 'Random', value: 'random', disabled: false },
+        { label: 'Custom', value: 'custom', disabled: false },
+      ],
+    },
+    {
+      label: 'Blocking level',
+      items: [
+        { label: 'None', value: 'none', disabled: false },
+        { label: 'Promotions', value: 'promo', disabled: false },
+        { label: 'All', value: 'all', disabled: false },
+      ],
+    },
+  ]);
+
   protected sortValue = signal<string>(this.sortOptions[0].value);
+  protected filterValue = signal<string[]>(
+    this.filterOptions()
+      .map((option) => option.items.map((item) => item.value))
+      .flat(),
+  );
 
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
@@ -100,40 +125,83 @@ export class Dashboard {
     this.router.navigate(['/']);
   }
 
+  protected onSearchChange(query: string) {
+    this.searchQuery.set(query);
+    this.applyTransforms();
+  }
+
   protected onSortChange(sort: string) {
     this.sortValue.set(sort);
+    this.applyTransforms();
+  }
+
+  protected onFilterChange(filter: string[]) {
+    this.filterOptions.update((groups) =>
+      groups.map((group) => {
+        const selectedItems = group.items.filter((item) => filter.includes(item.value));
+
+        return {
+          ...group,
+          items: group.items.map((item) => ({
+            ...item,
+            disabled: selectedItems.length === 1 && selectedItems[0].value === item.value,
+          })),
+        };
+      }),
+    );
+
+    this.filterValue.set(filter);
+    this.applyTransforms();
+  }
+
+  private applyTransforms() {
+    const sort = this.sortValue();
+    const filter = this.filterValue();
+    const query = this.searchQuery().toLowerCase();
+
+    const sortedAliases = this.data().aliases.sort((a: any, b: any) => {
+      switch (sort) {
+        case 'description-asc':
+          return (
+            a.description.toLowerCase().localeCompare(b.description.toLowerCase()) ||
+            a.full_address.toLowerCase().localeCompare(b.full_address.toLowerCase())
+          );
+
+        case 'description-desc':
+          return (
+            b.description.toLowerCase().localeCompare(a.description.toLowerCase()) ||
+            b.full_address.toLowerCase().localeCompare(a.full_address.toLowerCase())
+          );
+
+        case 'created-asc':
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+
+        case 'created-desc':
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+
+        case 'last-used-asc':
+          return new Date(b.last_used_at ?? 0).getTime() - new Date(a.last_used_at ?? 0).getTime();
+
+        case 'last-used-desc':
+          return new Date(a.last_used_at ?? 0).getTime() - new Date(b.last_used_at ?? 0).getTime();
+      }
+    });
 
     this.aliases.set(
-      this.data().aliases.sort((a: any, b: any) => {
-        switch (sort) {
-          case 'description-asc':
-            return (
-              a.description.toLowerCase().localeCompare(b.description.toLowerCase()) ||
-              a.full_address.toLowerCase().localeCompare(b.full_address.toLowerCase())
-            );
+      sortedAliases.filter((alias: any) => {
+        const typeMatch =
+          alias.mask_type === 'random' ? filter.includes('random') : filter.includes('custom');
 
-          case 'description-desc':
-            return (
-              b.description.toLowerCase().localeCompare(a.description.toLowerCase()) ||
-              b.full_address.toLowerCase().localeCompare(a.full_address.toLowerCase())
-            );
+        const blockingMatch = filter.includes(
+          alias.enabled ? (alias.block_list_emails ? 'promo' : 'none') : 'all',
+        );
 
-          case 'created-asc':
-            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        const searchMatch =
+          !query ||
+          alias.description?.toLowerCase().includes(query) ||
+          alias.full_address?.toLowerCase().includes(query);
 
-          case 'created-desc':
-            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-
-          case 'last-used-asc':
-            return (
-              new Date(b.last_used_at ?? 0).getTime() - new Date(a.last_used_at ?? 0).getTime()
-            );
-
-          case 'last-used-desc':
-            return (
-              new Date(a.last_used_at ?? 0).getTime() - new Date(b.last_used_at ?? 0).getTime()
-            );
-        }
+        return typeMatch && blockingMatch && searchMatch;
       }),
     );
   }
@@ -143,6 +211,8 @@ export class Dashboard {
       ...data,
       aliases: data.aliases.map((a: any) => (a.id === alias.id ? { ...a, ...alias } : a)),
     }));
+
+    this.applyTransforms();
   }
 
   protected showMessage(message: { success: boolean; title: string; message: string }) {

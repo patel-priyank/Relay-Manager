@@ -107,14 +107,15 @@
           type="text"
           pInputText
           placeholder="Label or address"
-          [(ngModel)]="searchQuery"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchChange($event)"
           fluid
           [disabled]="!data()"
         />
 
         <p-inputicon
           class="ph ph-x {{ searchQuery() ? 'cursor-pointer' : 'pointer-events-none opacity-0' }}"
-          (click)="searchQuery.set('')"
+          (click)="onSearchChange('')"
         />
       </p-iconfield>
     </div>
@@ -124,13 +125,13 @@
         <span class="text-current/50 text-sm px-2">Sort by</span>
 
         <p-select
-          inputId="sort"
           [options]="sortOptions"
           optionValue="value"
           optionLabel="label"
           [ngModel]="sortValue()"
           (ngModelChange)="onSortChange($event)"
           [disabled]="!data()"
+          scrollHeight="300px"
           class="w-full"
         />
       </div>
@@ -138,14 +139,15 @@
       <div class="flex flex-col gap-1 sm:flex-grow-1 md:w-[240px]">
         <span class="text-current/50 text-sm px-2">Filter</span>
 
-        <p-select
-          inputId="sort"
-          [options]="sortOptions"
-          optionValue="value"
-          optionLabel="label"
-          [ngModel]="sortValue()"
-          (ngModelChange)="onSortChange($event)"
+        <p-multiselect
+          group
+          showHeader="false"
+          highlightOnSelect="false"
+          [options]="filterOptions()"
+          [ngModel]="filterValue()"
+          (ngModelChange)="onFilterChange($event)"
           [disabled]="!data()"
+          scrollHeight="300px"
           class="w-full"
         />
       </div>
