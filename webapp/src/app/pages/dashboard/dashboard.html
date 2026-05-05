@@ -143,6 +143,8 @@
           group
           showHeader="false"
           highlightOnSelect="false"
+          [maxSelectedLabels]="0"
+          [selectedItemsLabel]="filterLabel()"
           [options]="filterOptions()"
           [ngModel]="filterValue()"
           (ngModelChange)="onFilterChange($event)"

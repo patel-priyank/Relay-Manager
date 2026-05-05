@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -63,6 +63,7 @@ export class Dashboard {
   protected filterOptions = signal([
     {
       label: 'Alias type',
+      shortLabel: 'Type',
       items: [
         { label: 'Random', value: 'random', disabled: false },
         { label: 'Custom', value: 'custom', disabled: false },
@@ -70,6 +71,7 @@ export class Dashboard {
     },
     {
       label: 'Blocking level',
+      shortLabel: 'Level',
       items: [
         { label: 'None', value: 'none', disabled: false },
         { label: 'Promotions', value: 'promo', disabled: false },
@@ -84,6 +86,18 @@ export class Dashboard {
       .map((option) => option.items.map((item) => item.value))
       .flat(),
   );
+
+  protected filterLabel = computed(() => {
+    const selected = this.filterValue();
+
+    return this.filterOptions()
+      .map((group) => {
+        const count = group.items.filter((item) => selected.includes(item.value)).length;
+
+        return `${count} ${group.shortLabel}${count === 1 ? '' : 's'}`;
+      })
+      .join(', ');
+  });
 
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
