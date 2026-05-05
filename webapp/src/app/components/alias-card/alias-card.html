@@ -24,7 +24,7 @@
     }
 
     @if (alias()) {
-      <form (ngSubmit)="updateDescription()" class="flex items-center justify-between gap-2">
+      <form (ngSubmit)="updateLabel()" class="flex items-center justify-between gap-2">
         <h3
           class="text-lg py-1.75 pr-0.5 truncate {{
             alias().description ? 'font-bold' : 'text-current/50 italic'
@@ -43,7 +43,7 @@
       <div class="flex items-center justify-between gap-2">
         <span class="truncate">{{ alias().full_address }}</span>
 
-        <p-button icon="ph ph-copy" severity="secondary" size="small" (click)="copyAlias()" />
+        <p-button icon="ph ph-copy" severity="secondary" size="small" (click)="copyAddress()" />
       </div>
     } @else {
       <p-skeleton height="35px" width="75%" />
@@ -89,9 +89,9 @@
       <p-button icon="ph ph-x" rounded severity="secondary" />
     </ng-template>
 
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-4">
       <div class="flex flex-col gap-0.5">
-        <span>Description</span>
+        <span>Label</span>
         <span
           class="break-all {{ alias().description ? 'font-medium' : 'text-current/50 italic' }}"
         >
@@ -100,7 +100,7 @@
       </div>
 
       <div class="flex flex-col gap-0.5">
-        <span>Alias</span>
+        <span>Address</span>
         <span class="break-all font-medium">{{ alias().full_address }}</span>
       </div>
 
@@ -110,9 +110,9 @@
           {{ blockingLevels().find(level => level.value === blockingLevel())?.longLabel }}
         </span>
 
-        <p-message severity="secondary" class="alias-message mt-2">
+        <p-message severity="secondary" class="blocking-level-message mt-2">
           <div class="flex flex-col items-start gap-3">
-            <p class="font-normal">
+            <p class="text-sm font-normal">
               {{ blockingLevels().find(level => level.value === blockingLevel())?.description }}
             </p>
 
@@ -131,9 +131,7 @@
         </p-message>
       </div>
 
-      <p-divider type="dotted" [style]="{ margin: '0px' }" />
-
-      <div class="flex flex-col gap-1">
+      <div class="mt-4 flex flex-col gap-1">
         <div class="flex items-center justify-between gap-4">
           <span>Emails blocked</span>
           <span class="font-medium">{{ alias().num_blocked }}</span>

@@ -8,11 +8,11 @@ import { forkJoin } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
+import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
@@ -28,12 +28,12 @@ import { AliasCard } from '../../components/alias-card/alias-card';
     ButtonModule,
     DatePipe,
     DialogModule,
-    DividerModule,
     FormsModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
     PanelModule,
+    SelectModule,
     SkeletonModule,
     TagModule,
     ToastModule,
@@ -44,9 +44,21 @@ import { AliasCard } from '../../components/alias-card/alias-card';
 })
 export class Dashboard {
   protected data = signal<any | null>(null);
+  protected aliases = signal<any[]>([]);
   protected profileDialogVisible = signal<boolean>(false);
   protected subscriptionDialogVisible = signal<boolean>(false);
   protected searchQuery = signal<string>('');
+
+  protected sortOptions = [
+    { value: 'description-asc', label: 'Label (A - Z)' },
+    { value: 'description-desc', label: 'Label (Z - A)' },
+    { value: 'created-asc', label: 'Created (Newest first)' },
+    { value: 'created-desc', label: 'Created (Oldest first)' },
+    { value: 'last-used-asc', label: 'Last used (Newest first)' },
+    { value: 'last-used-desc', label: 'Last used (Oldest first)' },
+  ];
+
+  protected sortValue = signal<string>(this.sortOptions[0].value);
 
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
@@ -71,10 +83,10 @@ export class Dashboard {
         this.data.set({
           email: res.user[0].email,
           profile: res.profile[0],
-          aliases: [...res.random, ...res.domain].sort((a, b) =>
-            a.description.toLowerCase().localeCompare(b.description.toLowerCase()),
-          ),
+          aliases: [...res.random, ...res.domain],
         });
+
+        this.onSortChange(this.sortValue());
       },
       error: (_err: HttpErrorResponse) => {
         this.disconnect();
@@ -86,6 +98,44 @@ export class Dashboard {
     localStorage.removeItem('relay-manager-api-key');
 
     this.router.navigate(['/']);
+  }
+
+  protected onSortChange(sort: string) {
+    this.sortValue.set(sort);
+
+    this.aliases.set(
+      this.data().aliases.sort((a: any, b: any) => {
+        switch (sort) {
+          case 'description-asc':
+            return (
+              a.description.toLowerCase().localeCompare(b.description.toLowerCase()) ||
+              a.full_address.toLowerCase().localeCompare(b.full_address.toLowerCase())
+            );
+
+          case 'description-desc':
+            return (
+              b.description.toLowerCase().localeCompare(a.description.toLowerCase()) ||
+              b.full_address.toLowerCase().localeCompare(a.full_address.toLowerCase())
+            );
+
+          case 'created-asc':
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+
+          case 'created-desc':
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+
+          case 'last-used-asc':
+            return (
+              new Date(b.last_used_at ?? 0).getTime() - new Date(a.last_used_at ?? 0).getTime()
+            );
+
+          case 'last-used-desc':
+            return (
+              new Date(a.last_used_at ?? 0).getTime() - new Date(b.last_used_at ?? 0).getTime()
+            );
+        }
+      }),
+    );
   }
 
   protected updateAlias(alias: any) {

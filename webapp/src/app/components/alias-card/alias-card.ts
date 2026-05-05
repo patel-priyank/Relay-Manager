@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { DividerModule } from 'primeng/divider';
 import { MessageModule } from 'primeng/message';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -19,7 +18,6 @@ import { TagModule } from 'primeng/tag';
     DatePipe,
     CardModule,
     DialogModule,
-    DividerModule,
     FormsModule,
     MessageModule,
     SelectButtonModule,
@@ -76,11 +74,11 @@ export class AliasCard {
     });
   }
 
-  protected updateDescription() {
-    console.log('updateDescription() called');
+  protected updateLabel() {
+    console.log('updateLabel() called');
   }
 
-  protected copyAlias() {
+  protected copyAddress() {
     navigator.clipboard.writeText(this.alias().full_address);
 
     this.onShowMessage.emit({
