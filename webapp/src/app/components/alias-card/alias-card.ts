@@ -108,6 +108,12 @@ export class AliasCard {
     setTimeout(() => this.aliasLabelInputRef.nativeElement.focus());
   }
 
+  protected hideAliasLabelInput(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.isAliasLabelEditable.set(false);
+    }
+  }
+
   protected updateAliasLabel() {
     const apiKey = localStorage.getItem('relay-manager-api-key');
 

@@ -34,6 +34,7 @@
             pInputText
             [ngModel]="aliasLabel()"
             (ngModelChange)="aliasLabel.set($event)"
+            (keydown)="hideAliasLabelInput($event)"
             autocomplete="off"
             [disabled]="isSavingAliasLabel()"
             fluid
