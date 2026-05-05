@@ -125,7 +125,7 @@ export class Dashboard {
           aliases: [...res.random, ...res.domain],
         });
 
-        this.onSortChange(this.sortValue());
+        this.applyTransforms();
       },
       error: (_err: HttpErrorResponse) => {
         this.disconnect();

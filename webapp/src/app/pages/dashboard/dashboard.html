@@ -19,7 +19,7 @@
             />
           </div>
         } @else {
-          <p-skeleton height="28px" [style]="{ maxWidth: '320px' }" />
+          <p-skeleton height="28px" />
         }
       </div>
 
@@ -38,7 +38,7 @@
           }
         </div>
       } @else {
-        <p-skeleton height="29px" width="100px" />
+        <p-skeleton height="29px" width="25%" />
       }
 
       <p-button label="Disconnect" icon="ph ph-link-simple-break" (click)="disconnect()" />
@@ -50,7 +50,7 @@
           @if (data()) {
             <span class="text-xl font-bold">{{ data().profile.emails_blocked }}</span>
           } @else {
-            <p-skeleton height="28px" width="80px" />
+            <p-skeleton height="28px" width="25%" />
           }
 
           <span class="text-sm text-current/50 truncate">Emails blocked</span>
@@ -62,7 +62,7 @@
           @if (data()) {
             <span class="text-xl font-bold">{{ data().profile.emails_forwarded }}</span>
           } @else {
-            <p-skeleton height="28px" width="80px" />
+            <p-skeleton height="28px" width="25%" />
           }
 
           <span class="text-sm text-current/50 truncate">Emails forwarded</span>
@@ -74,7 +74,7 @@
           @if (data()) {
             <span class="text-xl font-bold">{{ data().profile.emails_replied }}</span>
           } @else {
-            <p-skeleton height="28px" width="80px" />
+            <p-skeleton height="28px" width="25%" />
           }
 
           <span class="text-sm text-current/50 truncate">Emails replied</span>
@@ -86,7 +86,7 @@
           @if (data()) {
             <span class="text-xl font-bold">{{ data().profile.level_one_trackers_blocked }}</span>
           } @else {
-            <p-skeleton height="28px" width="80px" />
+            <p-skeleton height="28px" width="25%" />
           }
 
           <span class="text-sm text-current/50 truncate">Trackers blocked</span>
@@ -121,7 +121,7 @@
     </div>
 
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-2">
-      <div class="flex flex-col gap-1 sm:flex-grow-1 md:w-[240px]">
+      <div class="flex flex-col gap-1 flex-1 md:w-[240px]">
         <span class="text-current/50 text-sm px-2">Sort by</span>
 
         <p-select
@@ -136,7 +136,7 @@
         />
       </div>
 
-      <div class="flex flex-col gap-1 sm:flex-grow-1 md:w-[240px]">
+      <div class="flex flex-col gap-1 flex-1 md:w-[240px]">
         <span class="text-current/50 text-sm px-2">Filter</span>
 
         <p-multiselect
