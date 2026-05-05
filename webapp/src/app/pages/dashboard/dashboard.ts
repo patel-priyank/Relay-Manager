@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -44,7 +44,7 @@ import { AliasCard } from '../../components/alias-card/alias-card';
   styleUrl: './dashboard.scss',
   providers: [MessageService],
 })
-export class Dashboard {
+export class Dashboard implements AfterViewInit {
   protected data = signal<any | null>(null);
   protected aliases = signal<any[]>([]);
   protected isProfileDialogVisible = signal<boolean>(false);
@@ -99,9 +99,16 @@ export class Dashboard {
       .join(', ');
   });
 
+  private dashboardEl = inject(ElementRef);
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
   private router = inject(Router);
+
+  ngAfterViewInit() {
+    this.dashboardEl.nativeElement
+      .querySelector('.filter-dropdown input')
+      .setAttribute('inputmode', 'none');
+  }
 
   constructor() {
     const savedApiKey = localStorage.getItem('relay-manager-api-key');
