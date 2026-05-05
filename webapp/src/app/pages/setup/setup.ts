@@ -18,7 +18,7 @@ import { PasswordModule } from 'primeng/password';
 export class Setup {
   protected apiKey = signal('');
   protected error = signal('');
-  protected isLoading = signal(false);
+  protected isConnecting = signal(false);
 
   private http = inject(HttpClient);
   private router = inject(Router);
@@ -34,19 +34,19 @@ export class Setup {
   protected connect() {
     if (!this.apiKey().trim()) return;
 
-    this.isLoading.set(true);
+    this.isConnecting.set(true);
     this.error.set('');
 
     this.http.get(`/api/account/user?token=${this.apiKey()}`).subscribe({
       next: (_res: any) => {
-        this.isLoading.set(false);
+        this.isConnecting.set(false);
 
         localStorage.setItem('relay-manager-api-key', this.apiKey());
 
         this.router.navigate(['/dashboard']);
       },
       error: (err: HttpErrorResponse) => {
-        this.isLoading.set(false);
+        this.isConnecting.set(false);
 
         this.error.set(err.error.error);
       },

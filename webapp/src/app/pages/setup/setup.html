@@ -23,7 +23,6 @@
         (input)="error.set('')"
         toggleMask
         autocomplete="off"
-        [disabled]="isLoading()"
         feedback="false"
         class="{{ apiKey() ? 'font-mono' : '' }}"
         fluid
@@ -33,7 +32,7 @@
         label="Connect"
         fluid
         icon="ph ph-link-simple"
-        [loading]="isLoading()"
+        [loading]="isConnecting()"
         [disabled]="!apiKey().trim()"
         (click)="connect()"
       />
