@@ -95,74 +95,76 @@
     </div>
   </div>
 
-  <div class="flex flex-col md:flex-row justify-between gap-4 md:gap-2">
-    <div class="flex flex-col gap-1 md:w-full md:max-w-xs">
-      <div class="text-current/50 text-sm px-2 flex items-center gap-1">
-        <span>Search</span>
-      </div>
-
-      <p-iconfield>
-        <p-inputicon class="ph ph-magnifying-glass pointer-events-none" />
-
-        <input
-          type="text"
-          pInputText
-          placeholder="Label or address"
-          [ngModel]="searchQuery()"
-          (ngModelChange)="onSearchChange($event)"
-          fluid
-          [disabled]="!data()"
-        />
-
-        <p-inputicon
-          class="ph ph-x {{ searchQuery() ? 'cursor-pointer' : 'pointer-events-none opacity-0' }}"
-          (click)="onSearchChange('')"
-        />
-      </p-iconfield>
-    </div>
-
-    <div class="flex flex-col sm:flex-row gap-4 sm:gap-2">
-      <div class="flex flex-col gap-1 flex-1 md:w-[240px]">
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col md:flex-row justify-between gap-4 md:gap-2">
+      <div class="flex flex-col gap-1 md:w-full md:max-w-xs">
         <div class="text-current/50 text-sm px-2 flex items-center gap-1">
-          <span>Sort by</span>
+          <span>Search</span>
         </div>
 
-        <p-select
-          [options]="sortOptions"
-          optionValue="value"
-          optionLabel="label"
-          [ngModel]="sortValue()"
-          (ngModelChange)="onSortChange($event)"
-          [disabled]="!data()"
-          scrollHeight="300px"
-          class="w-full"
-        />
+        <p-iconfield>
+          <p-inputicon class="ph ph-magnifying-glass pointer-events-none" />
+
+          <input
+            type="text"
+            pInputText
+            placeholder="Label or address"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="onSearchChange($event)"
+            fluid
+            [disabled]="!data()"
+          />
+
+          <p-inputicon
+            class="ph ph-x {{ searchQuery() ? 'cursor-pointer' : 'pointer-events-none opacity-0' }}"
+            (click)="onSearchChange('')"
+          />
+        </p-iconfield>
       </div>
 
-      <div class="flex flex-col gap-1 flex-1 md:w-[240px]">
-        <div class="text-current/50 text-sm px-2 flex items-center gap-1">
-          <span>Filter</span>
+      <div class="flex flex-col sm:flex-row gap-4 sm:gap-2">
+        <div class="flex flex-col gap-1 flex-1 md:w-[240px]">
+          <div class="text-current/50 text-sm px-2 flex items-center gap-1">
+            <span>Sort by</span>
+          </div>
 
-          @if (
-            filterOptions().map((option) => option.items.map((item) => item.value)).flat().length !== filterValue().length
-          ) {
-            <div class="w-2 h-2 rounded-full bg-(--p-primary-color)"></div>
-          }
+          <p-select
+            [options]="sortOptions"
+            optionValue="value"
+            optionLabel="label"
+            [ngModel]="sortValue()"
+            (ngModelChange)="onSortChange($event)"
+            [disabled]="!data()"
+            scrollHeight="300px"
+            class="w-full"
+          />
         </div>
 
-        <p-multiselect
-          group
-          showHeader="false"
-          highlightOnSelect="false"
-          [maxSelectedLabels]="0"
-          [selectedItemsLabel]="filterLabel()"
-          [options]="filterOptions()"
-          [ngModel]="filterValue()"
-          (ngModelChange)="onFilterChange($event)"
-          [disabled]="!data()"
-          scrollHeight="300px"
-          class="filter-dropdown w-full"
-        />
+        <div class="flex flex-col gap-1 flex-1 md:w-[240px]">
+          <div class="text-current/50 text-sm px-2 flex items-center gap-1">
+            <span>Filter</span>
+
+            @if (
+              filterOptions().map((option) => option.items.map((item) => item.value)).flat().length !== filterValue().length
+            ) {
+              <div class="w-2 h-2 rounded-full bg-(--p-primary-color)"></div>
+            }
+          </div>
+
+          <p-multiselect
+            group
+            showHeader="false"
+            highlightOnSelect="false"
+            [maxSelectedLabels]="0"
+            [selectedItemsLabel]="filterLabel()"
+            [options]="filterOptions()"
+            [ngModel]="filterValue()"
+            (ngModelChange)="onFilterChange($event)"
+            [disabled]="!data()"
+            scrollHeight="300px"
+            class="filter-dropdown w-full"
+          />
+        </div>
       </div>
     </div>
   </div>
