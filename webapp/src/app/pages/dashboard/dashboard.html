@@ -98,17 +98,21 @@
   <p-divider type="dotted" />
 
   <div class="flex flex-col gap-4">
-    <div class="flex justify-between gap-2">
-      <p-iconfield class="flex-grow-1 max-w-xs">
-        <p-inputicon class="ph ph-magnifying-glass pointer-events-none" />
+    <div class="flex justify-between gap-2 mb-4">
+      <p-floatlabel class="flex-grow-1 max-w-xs">
+        <p-iconfield>
+          <p-inputicon class="ph ph-magnifying-glass pointer-events-none" />
 
-        <input type="text" placeholder="Search" pInputText [(ngModel)]="searchQuery" fluid />
+          <input id="search" type="text" pInputText [(ngModel)]="searchQuery" fluid />
 
-        <p-inputicon
-          class="ph ph-x {{ searchQuery() ? 'cursor-pointer' : 'pointer-events-none opacity-0' }}"
-          (click)="searchQuery.set('')"
-        />
-      </p-iconfield>
+          <p-inputicon
+            class="ph ph-x {{ searchQuery() ? 'cursor-pointer' : 'pointer-events-none opacity-0' }}"
+            (click)="searchQuery.set('')"
+          />
+        </p-iconfield>
+
+        <label for="search">Search</label>
+      </p-floatlabel>
 
       <div class="flex gap-2">
         <p-button icon="ph ph-arrows-down-up" severity="secondary" />
