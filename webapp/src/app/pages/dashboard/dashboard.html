@@ -175,6 +175,7 @@
             [alias]="alias"
             [isPremiumUser]="data().profile.has_premium"
             (onUpdateAlias)="updateAlias($event)"
+            (onDeleteAlias)="deleteAlias($event)"
             (onShowMessage)="showMessage($event)"
           />
         }

@@ -16,7 +16,12 @@
             (click)="isAliasDialogVisible.set(true)"
           />
 
-          <p-button icon="ph ph-trash" severity="danger" size="small" />
+          <p-button
+            icon="ph ph-trash"
+            severity="danger"
+            size="small"
+            (click)="isDeleteAliasDialogVisible.set(true)"
+          />
         </div>
       </div>
     } @else {
@@ -35,7 +40,6 @@
             (ngModelChange)="aliasLabel.set($event)"
             (keydown)="hideAliasLabelInput($event)"
             autocomplete="off"
-            [disabled]="isSavingAliasLabel()"
             fluid
           />
 
@@ -44,7 +48,6 @@
               icon="ph ph-x"
               severity="secondary"
               size="small"
-              [disabled]="isSavingAliasLabel()"
               (click)="isAliasLabelEditable.set(false)"
             />
 
@@ -111,6 +114,61 @@
     </div>
   </div>
 </p-card>
+
+@if (alias()) {
+  <p-dialog
+    header="Delete alias?"
+    [(visible)]="isDeleteAliasDialogVisible"
+    modal
+    draggable="false"
+    resizable="false"
+    dismissableMask
+    [style]="{ margin: '16px', width: '400px', maxWidth: '100%' }"
+  >
+    <ng-template #closeicon>
+      <p-button icon="ph ph-x" rounded severity="secondary" />
+    </ng-template>
+
+    <div class="flex flex-col gap-4">
+      <span class="text-lg font-bold break-all">{{ alias().full_address }}</span>
+
+      <p>
+        Once you delete this alias, it cannot be recovered. You will no longer receive any emails
+        sent to it.
+      </p>
+
+      <p>
+        If you use this alias to sign in to any accounts, you should change those account emails
+        before deleting this alias.
+      </p>
+
+      <p-message severity="error" icon="ph ph-warning">
+        <p class="font-normal">This action cannot be undone.</p>
+      </p-message>
+    </div>
+
+    <ng-template #footer>
+      <div class="w-full flex gap-4">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          fluid
+          class="flex-1"
+          (click)="isDeleteAliasDialogVisible.set(false)"
+        />
+
+        <p-button
+          label="Delete"
+          severity="danger"
+          fluid
+          [loading]="isDeletingAlias()"
+          class="flex-1"
+          (click)="deleteAlias()"
+        />
+      </div>
+    </ng-template>
+  </p-dialog>
+}
 
 @if (alias()) {
   <p-dialog

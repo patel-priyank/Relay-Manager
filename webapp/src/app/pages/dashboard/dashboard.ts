@@ -229,6 +229,15 @@ export class Dashboard {
     this.applyTransforms();
   }
 
+  protected deleteAlias(alias: any) {
+    this.data.update((data) => ({
+      ...data,
+      aliases: data.aliases.filter((a: any) => a.id !== alias.id),
+    }));
+
+    this.applyTransforms();
+  }
+
   protected showMessage(message: { success: boolean; title: string; message: string }) {
     this.messageService.clear();
 

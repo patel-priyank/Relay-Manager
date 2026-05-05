@@ -17,6 +17,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
@@ -30,6 +31,7 @@ import { TagModule } from 'primeng/tag';
     DialogModule,
     FormsModule,
     InputTextModule,
+    MessageModule,
     SelectButtonModule,
     SkeletonModule,
     TagModule,
@@ -44,6 +46,7 @@ export class AliasCard {
   isPremiumUser = input<boolean>(false);
 
   onUpdateAlias = output<any>();
+  onDeleteAlias = output<any>();
   onShowMessage = output<{ success: boolean; title: string; message: string }>();
 
   protected blockingLevels = computed(() => [
@@ -73,6 +76,9 @@ export class AliasCard {
 
   protected isAliasDialogVisible = signal<boolean>(false);
 
+  protected isDeleteAliasDialogVisible = signal<boolean>(false);
+  protected isDeletingAlias = signal<boolean>(false);
+
   protected aliasLabel = signal<string>('');
   protected isAliasLabelEditable = signal<boolean>(false);
   protected isSavingAliasLabel = signal<boolean>(false);
@@ -100,6 +106,51 @@ export class AliasCard {
     } else {
       this.blockingLevel.set('all');
     }
+  }
+
+  protected deleteAlias() {
+    const apiKey = localStorage.getItem('relay-manager-api-key');
+
+    if (!this.alias()) return;
+    if (!apiKey) return;
+
+    let maskType = '';
+
+    switch (this.alias().mask_type) {
+      case 'random':
+        maskType = 'random';
+        break;
+
+      case 'custom':
+        maskType = 'domain';
+        break;
+    }
+
+    this.isDeletingAlias.set(true);
+
+    this.http.delete(`/api/${maskType}/${this.alias().id}?token=${apiKey}`).subscribe({
+      next: (_res: any) => {
+        this.isDeletingAlias.set(false);
+        this.isDeleteAliasDialogVisible.set(false);
+
+        this.onDeleteAlias.emit(this.alias());
+
+        this.onShowMessage.emit({
+          success: true,
+          title: 'Success',
+          message: `Alias ${this.alias().full_address} deleted`,
+        });
+      },
+      error: (_err: HttpErrorResponse) => {
+        this.isDeletingAlias.set(false);
+
+        this.onShowMessage.emit({
+          success: false,
+          title: 'Error',
+          message: `Alias ${this.alias().full_address} could not be deleted`,
+        });
+      },
+    });
   }
 
   protected showAliasLabelInput() {
