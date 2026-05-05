@@ -103,7 +103,6 @@
         <p-inputicon class="ph ph-magnifying-glass pointer-events-none" />
 
         <input
-          id="search"
           type="text"
           pInputText
           placeholder="Label or address"
@@ -130,6 +129,7 @@
           optionLabel="label"
           [ngModel]="sortValue()"
           (ngModelChange)="onSortChange($event)"
+          [filter]="false"
           [disabled]="!data()"
           scrollHeight="300px"
           class="w-full"
@@ -148,6 +148,7 @@
           [options]="filterOptions()"
           [ngModel]="filterValue()"
           (ngModelChange)="onFilterChange($event)"
+          [filter]="false"
           [disabled]="!data()"
           scrollHeight="300px"
           class="w-full"
