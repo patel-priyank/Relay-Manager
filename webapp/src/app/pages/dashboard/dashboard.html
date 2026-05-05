@@ -158,13 +158,17 @@
 
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     @if (data()) {
-      @for (alias of aliases(); track alias.id) {
-        <app-alias-card
-          [alias]="alias"
-          [isPremiumUser]="data().profile.has_premium"
-          (onUpdateAlias)="updateAlias($event)"
-          (onShowMessage)="showMessage($event)"
-        />
+      @if (aliases() && aliases().length > 0) {
+        @for (alias of aliases(); track alias.id) {
+          <app-alias-card
+            [alias]="alias"
+            [isPremiumUser]="data().profile.has_premium"
+            (onUpdateAlias)="updateAlias($event)"
+            (onShowMessage)="showMessage($event)"
+          />
+        }
+      } @else {
+        <span class="sm:col-span-2 text-current/50 text-center">No aliases found.</span>
       }
     } @else {
       @for (item of [1, 2, 3, 4, 5, 6]; track item) {
