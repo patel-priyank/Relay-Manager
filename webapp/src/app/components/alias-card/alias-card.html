@@ -24,16 +24,54 @@
     }
 
     @if (alias()) {
-      <form (ngSubmit)="updateLabel()" class="flex items-center justify-between gap-2">
-        <h3
-          class="text-lg py-1.75 pr-0.5 truncate {{
-            alias().description ? 'font-bold' : 'text-current/50 italic'
-          }}"
-        >
-          {{ alias().description || 'Untitled' }}
-        </h3>
+      <form (ngSubmit)="updateAliasLabel()" class="flex items-center justify-between gap-2">
+        @if (isAliasLabelEditable()) {
+          <input
+            #aliasLabelInputRef
+            type="text"
+            name="alias-label"
+            placeholder="{{ alias().description || 'Label' }}"
+            pInputText
+            [ngModel]="aliasLabel()"
+            (ngModelChange)="aliasLabel.set($event)"
+            autocomplete="off"
+            [disabled]="isSavingAliasLabel()"
+            fluid
+          />
 
-        <p-button icon="ph ph-pencil" severity="secondary" size="small" />
+          <div class="flex items-center gap-2">
+            <p-button
+              icon="ph ph-x"
+              severity="secondary"
+              size="small"
+              [disabled]="isSavingAliasLabel()"
+              (click)="isAliasLabelEditable.set(false)"
+            />
+
+            <p-button
+              icon="ph {{ isSavingAliasLabel() ? 'ph-circle-notch animate-spin' : 'ph-check' }}"
+              severity="success"
+              size="small"
+              [disabled]="isSavingAliasLabel()"
+              (click)="updateAliasLabel()"
+            />
+          </div>
+        } @else {
+          <h3
+            class="text-lg py-1.75 pr-0.5 truncate {{
+              alias().description ? 'font-bold' : 'text-current/50 italic'
+            }}"
+          >
+            {{ alias().description || 'No label' }}
+          </h3>
+
+          <p-button
+            icon="ph ph-pencil"
+            severity="secondary"
+            size="small"
+            (click)="showAliasLabelInput()"
+          />
+        }
       </form>
     } @else {
       <p-skeleton height="42px" />
@@ -94,7 +132,7 @@
         <span
           class="break-all {{ alias().description ? 'font-medium' : 'text-current/50 italic' }}"
         >
-          {{ alias().description || 'Untitled' }}
+          {{ alias().description || 'No label' }}
         </span>
       </div>
 

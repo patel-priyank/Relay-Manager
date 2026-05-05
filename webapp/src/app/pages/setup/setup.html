@@ -23,6 +23,7 @@
         (input)="error.set('')"
         toggleMask
         autocomplete="off"
+        [disabled]="isLoading()"
         feedback="false"
         class="{{ apiKey() ? 'font-mono' : '' }}"
         fluid
