@@ -180,7 +180,17 @@
           />
         }
       } @else {
-        <span class="sm:col-span-2 text-current/50 text-center">No aliases found.</span>
+        <div class="sm:col-span-2 flex flex-col items-center gap-4 text-current/50">
+          <i class="ph ph-mask-sad text-5xl"></i>
+
+          <span class="text-center text-balance">
+            @if (data().aliases.length > 0) {
+              No aliases found. Try adjusting your search or filters.
+            } @else {
+              No aliases yet. Time to make a new one.
+            }
+          </span>
+        </div>
       }
     } @else {
       @for (item of [1, 2, 3, 4, 5, 6]; track item) {
