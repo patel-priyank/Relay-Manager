@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { MessageModule } from 'primeng/message';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
@@ -19,7 +18,6 @@ import { TagModule } from 'primeng/tag';
     CardModule,
     DialogModule,
     FormsModule,
-    MessageModule,
     SelectButtonModule,
     SkeletonModule,
     TagModule,
@@ -41,7 +39,6 @@ export class AliasCard {
       longLabel: 'None',
       description: 'All emails sent to this alias will be forwarded to your real address.',
       disabled: false,
-      learnMore: false,
     },
     {
       value: 'promo',
@@ -50,7 +47,6 @@ export class AliasCard {
       description:
         'Firefox Relay will attempt to block promotional emails while still forwarding emails like receipts and shipping information.',
       disabled: !this.isPremiumUser(),
-      learnMore: true,
     },
     {
       value: 'all',
@@ -58,7 +54,6 @@ export class AliasCard {
       longLabel: 'All',
       description: 'Firefox Relay is blocking all emails sent to this alias.',
       disabled: false,
-      learnMore: false,
     },
   ]);
 

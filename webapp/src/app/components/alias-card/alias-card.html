@@ -108,26 +108,9 @@
         <span class="break-all font-medium">
           {{ blockingLevels().find(level => level.value === blockingLevel())?.longLabel }}
         </span>
-
-        <p-message severity="secondary" class="blocking-level-message mt-2">
-          <div class="flex flex-col items-start gap-3">
-            <p class="text-sm font-normal">
-              {{ blockingLevels().find(level => level.value === blockingLevel())?.description }}
-            </p>
-
-            @if (blockingLevels().find(level => level.value === blockingLevel())?.learnMore) {
-              <a
-                pButton
-                href="https://relay.firefox.com/faq/#faq-promotional-email-blocking"
-                target="_blank"
-                rel="noopener noreferrer"
-                size="small"
-              >
-                <span pButtonLabel>Learn more</span>
-              </a>
-            }
-          </div>
-        </p-message>
+        <span class="text-sm text-current/50">
+          {{ blockingLevels().find(level => level.value === blockingLevel())?.description }}
+        </span>
       </div>
 
       <div class="mt-4 flex flex-col gap-1">
