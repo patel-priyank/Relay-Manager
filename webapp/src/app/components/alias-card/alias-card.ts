@@ -120,6 +120,12 @@ export class AliasCard {
     if (!this.alias()) return;
     if (!apiKey) return;
 
+    if (this.aliasLabel() === this.alias().description) {
+      this.isAliasLabelEditable.set(false);
+
+      return;
+    }
+
     let maskType = '';
 
     switch (this.alias().mask_type) {
