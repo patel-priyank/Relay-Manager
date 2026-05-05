@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-8 pb-30">
+<div class="flex flex-col gap-8 pb-16">
   <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 justify-between">
     <div class="sm:col-span-2 flex-1 flex flex-col items-start gap-4">
       <div class="flex flex-col items-start gap-1 w-full">
@@ -48,7 +48,7 @@
       <p-panel showHeader="false" class="statistic-panel">
         <div class="flex flex-col gap-0.5 w-full">
           @if (data()) {
-            <span class="text-xl font-bold">{{ data().profile.emails_blocked }}</span>
+            <span class="text-xl font-medium">{{ data().profile.emails_blocked }}</span>
           } @else {
             <p-skeleton height="28px" width="25%" />
           }
@@ -60,7 +60,7 @@
       <p-panel showHeader="false" class="statistic-panel">
         <div class="flex flex-col gap-0.5 w-full">
           @if (data()) {
-            <span class="text-xl font-bold">{{ data().profile.emails_forwarded }}</span>
+            <span class="text-xl font-medium">{{ data().profile.emails_forwarded }}</span>
           } @else {
             <p-skeleton height="28px" width="25%" />
           }
@@ -72,7 +72,7 @@
       <p-panel showHeader="false" class="statistic-panel">
         <div class="flex flex-col gap-0.5 w-full">
           @if (data()) {
-            <span class="text-xl font-bold">{{ data().profile.emails_replied }}</span>
+            <span class="text-xl font-medium">{{ data().profile.emails_replied }}</span>
           } @else {
             <p-skeleton height="28px" width="25%" />
           }
@@ -84,7 +84,7 @@
       <p-panel showHeader="false" class="statistic-panel">
         <div class="flex flex-col gap-0.5 w-full">
           @if (data()) {
-            <span class="text-xl font-bold">{{ data().profile.level_one_trackers_blocked }}</span>
+            <span class="text-xl font-medium">{{ data().profile.level_one_trackers_blocked }}</span>
           } @else {
             <p-skeleton height="28px" width="25%" />
           }

@@ -62,7 +62,7 @@
         } @else {
           <h3
             class="text-lg py-1.75 pr-0.5 truncate {{
-              alias().description ? 'font-bold' : 'text-current/50 italic'
+              alias().description ? 'font-medium' : 'text-current/50 italic'
             }}"
           >
             {{ alias().description || 'No label' }}
@@ -129,8 +129,8 @@
       <p-button icon="ph ph-x" rounded severity="secondary" />
     </ng-template>
 
-    <div class="flex flex-col gap-4">
-      <span class="text-lg font-bold break-all">{{ alias().full_address }}</span>
+    <div class="flex flex-col gap-6">
+      <span class="text-lg font-medium break-all">{{ alias().full_address }}</span>
 
       <p>
         Once you delete this alias, it cannot be recovered. You will no longer receive any emails
@@ -148,7 +148,7 @@
     </div>
 
     <ng-template #footer>
-      <div class="w-full flex gap-4">
+      <div class="w-full flex gap-4 mt-2">
         <p-button
           label="Cancel"
           severity="secondary"
