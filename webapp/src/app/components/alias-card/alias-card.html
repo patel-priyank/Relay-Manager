@@ -13,7 +13,7 @@
             icon="ph ph-info"
             severity="secondary"
             size="small"
-            (click)="aliasDialogVisible.set(true)"
+            (click)="isAliasDialogVisible.set(true)"
           />
 
           <p-button icon="ph ph-trash" severity="danger" size="small" />
@@ -30,7 +30,6 @@
             #aliasLabelInputRef
             type="text"
             name="alias-label"
-            placeholder="{{ alias().description || 'Label' }}"
             pInputText
             [ngModel]="aliasLabel()"
             (ngModelChange)="aliasLabel.set($event)"
@@ -116,7 +115,7 @@
 @if (alias()) {
   <p-dialog
     header="Alias"
-    [(visible)]="aliasDialogVisible"
+    [(visible)]="isAliasDialogVisible"
     modal
     draggable="false"
     resizable="false"

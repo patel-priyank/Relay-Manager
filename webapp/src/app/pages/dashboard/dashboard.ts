@@ -47,8 +47,8 @@ import { AliasCard } from '../../components/alias-card/alias-card';
 export class Dashboard {
   protected data = signal<any | null>(null);
   protected aliases = signal<any[]>([]);
-  protected profileDialogVisible = signal<boolean>(false);
-  protected subscriptionDialogVisible = signal<boolean>(false);
+  protected isProfileDialogVisible = signal<boolean>(false);
+  protected isSubscriptionDialogVisible = signal<boolean>(false);
   protected searchQuery = signal<string>('');
 
   protected sortOptions = [

@@ -27,7 +27,7 @@ export class Header implements OnDestroy {
   @ViewChild('closeBtnRef') closeBtnRef!: Button;
   @ViewChild('drawerRef') drawerRef!: Drawer;
 
-  protected drawerVisible = signal<boolean>(false);
+  protected isDrawerVisible = signal<boolean>(false);
   protected theme = signal<string>('system');
 
   private isSystemDarkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -79,10 +79,10 @@ export class Header implements OnDestroy {
   }
 
   protected toggleDrawer(event: Event) {
-    if (this.drawerVisible()) {
+    if (this.isDrawerVisible()) {
       this.drawerRef.close(event);
     } else {
-      this.drawerVisible.set(true);
+      this.isDrawerVisible.set(true);
     }
   }
 

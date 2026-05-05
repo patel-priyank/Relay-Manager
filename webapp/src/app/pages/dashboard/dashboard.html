@@ -15,7 +15,7 @@
               rounded
               severity="secondary"
               class="btn-xs flex"
-              (click)="profileDialogVisible.set(true)"
+              (click)="isProfileDialogVisible.set(true)"
             />
           </div>
         } @else {
@@ -33,7 +33,7 @@
               rounded
               severity="secondary"
               class="btn-xs flex"
-              (click)="subscriptionDialogVisible.set(true)"
+              (click)="isSubscriptionDialogVisible.set(true)"
             />
           }
         </div>
@@ -194,7 +194,7 @@
 @if (data()) {
   <p-dialog
     header="Profile"
-    [(visible)]="profileDialogVisible"
+    [(visible)]="isProfileDialogVisible"
     modal
     draggable="false"
     resizable="false"
@@ -222,7 +222,7 @@
 @if (data()) {
   <p-dialog
     header="Subscription"
-    [(visible)]="subscriptionDialogVisible"
+    [(visible)]="isSubscriptionDialogVisible"
     modal
     draggable="false"
     resizable="false"

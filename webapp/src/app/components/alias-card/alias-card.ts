@@ -71,7 +71,7 @@ export class AliasCard {
     },
   ]);
 
-  protected aliasDialogVisible = signal<boolean>(false);
+  protected isAliasDialogVisible = signal<boolean>(false);
 
   protected aliasLabel = signal<string>('');
   protected isAliasLabelEditable = signal<boolean>(false);
