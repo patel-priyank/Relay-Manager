@@ -22,6 +22,20 @@
   }
 }
 
+.paginator ::ng-deep {
+  .p-paginator-first,
+  .p-paginator-prev,
+  .p-paginator-next,
+  .p-paginator-last {
+    display: none;
+  }
+
+  .p-paginator-jtp-dropdown,
+  .p-paginator-rpp-dropdown {
+    width: 100%;
+  }
+}
+
 .p-toast ::ng-deep {
   .p-toast-message-info,
   .p-toast-message-success,

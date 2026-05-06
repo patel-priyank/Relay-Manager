@@ -12,6 +12,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { PaginatorModule } from 'primeng/paginator';
 import { PanelModule } from 'primeng/panel';
 import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -34,6 +35,7 @@ import { AliasCard } from '../../components/alias-card/alias-card';
     InputIconModule,
     InputTextModule,
     MultiSelectModule,
+    PaginatorModule,
     PanelModule,
     SelectModule,
     SkeletonModule,
@@ -47,9 +49,18 @@ import { AliasCard } from '../../components/alias-card/alias-card';
 export class Dashboard implements AfterViewInit {
   protected data = signal<any | null>(null);
   protected aliases = signal<any[]>([]);
+
   protected isProfileDialogVisible = signal<boolean>(false);
   protected isSubscriptionDialogVisible = signal<boolean>(false);
-  protected searchQuery = signal<string>('');
+
+  protected paginatorFirst = signal<number>(0);
+  protected paginatorRows = signal<number>(30);
+  protected paginatorTotalRecords = computed(() => this.aliases().length);
+  protected paginatorRowsPerPageOptions = [10, 30, 50, 100];
+
+  protected skeletonAliasCards = computed(() =>
+    Array.from({ length: this.paginatorRows() }, (_, i) => i),
+  );
 
   protected sortOptions = [
     { value: 'description-asc', label: 'Label (A - Z)' },
@@ -80,6 +91,7 @@ export class Dashboard implements AfterViewInit {
     },
   ]);
 
+  protected searchQuery = signal<string>('');
   protected sortValue = signal<string>(this.sortOptions[0].value);
   protected filterValue = signal<string[]>(
     this.filterOptions()
@@ -146,11 +158,13 @@ export class Dashboard implements AfterViewInit {
 
   protected onSearchChange(query: string) {
     this.searchQuery.set(query);
+    this.paginatorFirst.set(0);
     this.applyTransforms();
   }
 
   protected onSortChange(sort: string) {
     this.sortValue.set(sort);
+    this.paginatorFirst.set(0);
     this.applyTransforms();
   }
 
@@ -170,7 +184,13 @@ export class Dashboard implements AfterViewInit {
     );
 
     this.filterValue.set(filter);
+    this.paginatorFirst.set(0);
     this.applyTransforms();
+  }
+
+  protected onPageChange(event: { first?: number; rows?: number }) {
+    this.paginatorFirst.set(event.first ?? 0);
+    this.paginatorRows.set(event.rows ?? this.paginatorRows());
   }
 
   private applyTransforms() {
