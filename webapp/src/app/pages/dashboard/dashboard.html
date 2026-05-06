@@ -169,37 +169,24 @@
     </div>
   </div>
 
-  <div class="paginator hidden sm:flex justify-center">
+  <div class="paginator flex items-center justify-center gap-4 flex-col-reverse sm:flex-row">
     <p-paginator
       [first]="paginatorFirst()"
       [rows]="paginatorRows()"
       [totalRecords]="paginatorTotalRecords()"
-      [showJumpToPageDropdown]="true"
-      (onPageChange)="onPageChange($event)"
-      [style]="{
-        background: 'transparent',
-        padding: '0px',
-        justifyContent: 'flex-start',
-        gap: '4px',
-      }"
-    />
-  </div>
-
-  <div class="paginator flex sm:hidden justify-center">
-    <p-paginator
-      [first]="paginatorFirst()"
-      [rows]="paginatorRows()"
-      [totalRecords]="paginatorTotalRecords()"
-      [showJumpToPageDropdown]="true"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} to {last} of {totalRecords}"
       [showPageLinks]="false"
-      [showFirstLastIcon]="false"
       (onPageChange)="onPageChange($event)"
-      [style]="{
-        background: 'transparent',
-        padding: '0px',
-        justifyContent: 'flex-start',
-        gap: '4px',
-      }"
+      class="page-report"
+    />
+
+    <p-paginator
+      [first]="paginatorFirst()"
+      [rows]="paginatorRows()"
+      [totalRecords]="paginatorTotalRecords()"
+      [pageLinkSize]="3"
+      (onPageChange)="onPageChange($event)"
     />
   </div>
 

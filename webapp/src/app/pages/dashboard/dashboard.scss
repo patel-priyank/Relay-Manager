@@ -23,8 +23,24 @@
 }
 
 .paginator ::ng-deep {
-  .p-paginator-jtp-dropdown {
-    min-width: 128px;
+  p-paginator {
+    background: transparent;
+    padding: 0px;
+    gap: 4px;
+  }
+
+  .page-report {
+    .p-paginator-current {
+      min-width: 160px;
+      text-align: center;
+    }
+
+    .p-paginator-first,
+    .p-paginator-prev,
+    .p-paginator-next,
+    .p-paginator-last {
+      display: none;
+    }
   }
 }
 
