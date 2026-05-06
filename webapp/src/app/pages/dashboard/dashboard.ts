@@ -88,15 +88,13 @@ export class Dashboard implements AfterViewInit {
   );
 
   protected filterLabel = computed(() => {
-    const selected = this.filterValue();
+    const selected = this.filterValue().length;
 
-    return this.filterOptions()
-      .map((group) => {
-        const count = group.items.filter((item) => selected.includes(item.value)).length;
+    const total = this.filterOptions()
+      .map((option) => option.items.map((item) => item.value))
+      .flat().length;
 
-        return `${group.shortLabel}: ${count} of ${group.items.length}`;
-      })
-      .join(', ');
+    return `${selected} of ${total} selected`;
   });
 
   private dashboardEl = inject(ElementRef);
