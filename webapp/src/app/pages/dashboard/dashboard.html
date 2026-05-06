@@ -142,7 +142,7 @@
 
         <div class="flex flex-col gap-1 flex-1 md:w-[240px]">
           <div class="text-current/50 text-sm px-2 flex items-center gap-1">
-            <span>Filter</span>
+            <span>Filters</span>
 
             @if (
               filterOptions().map((option) => option.items.map((item) => item.value)).flat().length !== filterValue().length
@@ -213,7 +213,7 @@
             @if (data().aliases.length > 0) {
               No aliases found. Try adjusting your search or filters.
             } @else {
-              No aliases yet. Time to make a new one.
+              No aliases yet. Time to make a new one!
             }
           </span>
         </div>

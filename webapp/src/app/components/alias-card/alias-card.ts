@@ -74,7 +74,7 @@ export class AliasCard {
     },
   ]);
 
-  protected isAliasDialogVisible = signal<boolean>(false);
+  protected isStatisticsDialogVisible = signal<boolean>(false);
 
   protected isDeleteAliasDialogVisible = signal<boolean>(false);
   protected isDeletingAlias = signal<boolean>(false);
