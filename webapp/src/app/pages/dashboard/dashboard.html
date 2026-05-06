@@ -167,69 +167,40 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="paginator flex flex-wrap sm:flex-nowrap justify-center gap-2">
-      <div class="flex flex-col gap-1 w-full sm:flex-1 sm:max-w-[240px] items-center justify-end">
-        <p-paginator
-          [first]="paginatorFirst()"
-          [rows]="paginatorRows()"
-          [totalRecords]="paginatorTotalRecords()"
-          [showJumpToPageDropdown]="false"
-          [showPageLinks]="false"
-          [showCurrentPageReport]="true"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-          (onPageChange)="onPageChange($event)"
-          [style]="{
-            background: 'transparent',
-            padding: '9px 0px',
-            justifyContent: 'flex-start',
-            gap: '8px',
-          }"
-        />
-      </div>
+  <div class="paginator hidden sm:flex justify-center">
+    <p-paginator
+      [first]="paginatorFirst()"
+      [rows]="paginatorRows()"
+      [totalRecords]="paginatorTotalRecords()"
+      [showJumpToPageDropdown]="true"
+      (onPageChange)="onPageChange($event)"
+      [style]="{
+        background: 'transparent',
+        padding: '0px',
+        justifyContent: 'flex-start',
+        gap: '4px',
+      }"
+    />
+  </div>
 
-      <div class="flex flex-col gap-1 flex-1 w-[calc(50%-4px)] sm:max-w-[240px]">
-        <div class="text-current/50 text-sm px-2 flex items-center gap-1">
-          <span>Page</span>
-        </div>
-
-        <p-paginator
-          [first]="paginatorFirst()"
-          [rows]="paginatorRows()"
-          [totalRecords]="paginatorTotalRecords()"
-          [showJumpToPageDropdown]="true"
-          [showPageLinks]="false"
-          (onPageChange)="onPageChange($event)"
-          [style]="{
-            background: 'transparent',
-            padding: '0px',
-            justifyContent: 'flex-start',
-            gap: '8px',
-          }"
-        />
-      </div>
-
-      <div class="flex flex-col gap-1 flex-1 w-[calc(50%-4px)] sm:max-w-[240px]">
-        <div class="text-current/50 text-sm px-2 flex items-center gap-1">
-          <span>Aliases per page</span>
-        </div>
-
-        <p-paginator
-          [first]="paginatorFirst()"
-          [rows]="paginatorRows()"
-          [totalRecords]="paginatorTotalRecords()"
-          [rowsPerPageOptions]="paginatorRowsPerPageOptions"
-          [showPageLinks]="false"
-          (onPageChange)="onPageChange($event)"
-          [style]="{
-            background: 'transparent',
-            padding: '0px',
-            justifyContent: 'flex-start',
-            gap: '8px',
-          }"
-        />
-      </div>
-    </div>
+  <div class="paginator flex sm:hidden justify-center">
+    <p-paginator
+      [first]="paginatorFirst()"
+      [rows]="paginatorRows()"
+      [totalRecords]="paginatorTotalRecords()"
+      [showJumpToPageDropdown]="true"
+      [showPageLinks]="false"
+      [showFirstLastIcon]="false"
+      (onPageChange)="onPageChange($event)"
+      [style]="{
+        background: 'transparent',
+        padding: '0px',
+        justifyContent: 'flex-start',
+        gap: '4px',
+      }"
+    />
   </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

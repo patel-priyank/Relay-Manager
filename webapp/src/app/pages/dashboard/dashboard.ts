@@ -54,9 +54,8 @@ export class Dashboard implements AfterViewInit {
   protected isSubscriptionDialogVisible = signal<boolean>(false);
 
   protected paginatorFirst = signal<number>(0);
-  protected paginatorRows = signal<number>(30);
+  protected paginatorRows = signal<number>(20);
   protected paginatorTotalRecords = computed(() => this.aliases().length);
-  protected paginatorRowsPerPageOptions = [10, 30, 50, 100];
 
   protected skeletonAliasCards = computed(() =>
     Array.from({ length: this.paginatorRows() }, (_, i) => i),

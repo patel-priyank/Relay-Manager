@@ -23,16 +23,8 @@
 }
 
 .paginator ::ng-deep {
-  .p-paginator-first,
-  .p-paginator-prev,
-  .p-paginator-next,
-  .p-paginator-last {
-    display: none;
-  }
-
-  .p-paginator-jtp-dropdown,
-  .p-paginator-rpp-dropdown {
-    width: 100%;
+  .p-paginator-jtp-dropdown {
+    min-width: 128px;
   }
 }
 
