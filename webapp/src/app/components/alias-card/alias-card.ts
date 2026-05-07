@@ -108,51 +108,6 @@ export class AliasCard {
     }
   }
 
-  protected deleteAlias() {
-    const apiKey = localStorage.getItem('relay-manager-api-key');
-
-    if (!this.alias()) return;
-    if (!apiKey) return;
-
-    let maskType = '';
-
-    switch (this.alias().mask_type) {
-      case 'random':
-        maskType = 'random';
-        break;
-
-      case 'custom':
-        maskType = 'domain';
-        break;
-    }
-
-    this.isDeletingAlias.set(true);
-
-    this.http.delete(`/api/${maskType}/${this.alias().id}?token=${apiKey}`).subscribe({
-      next: (_res: any) => {
-        this.isDeletingAlias.set(false);
-        this.isDeleteAliasDialogVisible.set(false);
-
-        this.onDeleteAlias.emit(this.alias());
-
-        this.onShowMessage.emit({
-          success: true,
-          title: 'Success',
-          message: `Alias ${this.alias().full_address} deleted`,
-        });
-      },
-      error: (_err: HttpErrorResponse) => {
-        this.isDeletingAlias.set(false);
-
-        this.onShowMessage.emit({
-          success: false,
-          title: 'Error',
-          message: `Alias ${this.alias().full_address} could not be deleted`,
-        });
-      },
-    });
-  }
-
   protected showAliasLabelInput() {
     this.isAliasLabelEditable.set(true);
     this.aliasLabel.set(this.alias().description || '');
@@ -303,6 +258,51 @@ export class AliasCard {
           success: false,
           title: 'Error',
           message: `Blocking level could not be updated for ${this.alias().full_address}`,
+        });
+      },
+    });
+  }
+
+  protected deleteAlias() {
+    const apiKey = localStorage.getItem('relay-manager-api-key');
+
+    if (!this.alias()) return;
+    if (!apiKey) return;
+
+    let maskType = '';
+
+    switch (this.alias().mask_type) {
+      case 'random':
+        maskType = 'random';
+        break;
+
+      case 'custom':
+        maskType = 'domain';
+        break;
+    }
+
+    this.isDeletingAlias.set(true);
+
+    this.http.delete(`/api/${maskType}/${this.alias().id}?token=${apiKey}`).subscribe({
+      next: (_res: any) => {
+        this.isDeletingAlias.set(false);
+        this.isDeleteAliasDialogVisible.set(false);
+
+        this.onDeleteAlias.emit(this.alias());
+
+        this.onShowMessage.emit({
+          success: true,
+          title: 'Success',
+          message: `Alias ${this.alias().full_address} deleted`,
+        });
+      },
+      error: (_err: HttpErrorResponse) => {
+        this.isDeletingAlias.set(false);
+
+        this.onShowMessage.emit({
+          success: false,
+          title: 'Error',
+          message: `Alias ${this.alias().full_address} could not be deleted`,
         });
       },
     });
