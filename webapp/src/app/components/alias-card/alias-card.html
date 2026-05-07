@@ -84,6 +84,7 @@
         [ngModel]="blockingLevel()"
         (ngModelChange)="updateBlockingLevel($event)"
         [disabled]="!alias() || isSavingBlockingLevel()"
+        class="blocking-levels"
       >
         <ng-template #item let-item>
           @if (item.value === blockingLevel() && isSavingBlockingLevel()) {
