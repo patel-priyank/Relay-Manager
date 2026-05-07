@@ -163,7 +163,13 @@
             [disabled]="!data()"
             scrollHeight="300px"
             class="filter-dropdown w-full"
-          />
+          >
+            <ng-template #footer>
+              <div class="px-3 py-2 flex justify-end">
+                <p-button label="Reset" text size="small" (click)="onResetFilters()" />
+              </div>
+            </ng-template>
+          </p-multiselect>
         </div>
       </div>
     </div>

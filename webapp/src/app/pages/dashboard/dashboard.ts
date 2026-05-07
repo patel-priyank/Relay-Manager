@@ -187,6 +187,24 @@ export class Dashboard implements AfterViewInit {
     this.applyTransforms();
   }
 
+  protected onResetFilters() {
+    this.filterOptions.update((groups) =>
+      groups.map((group) => ({
+        ...group,
+        items: group.items.map((item) => ({ ...item, disabled: false })),
+      })),
+    );
+
+    this.filterValue.set(
+      this.filterOptions()
+        .map((option) => option.items.map((item) => item.value))
+        .flat(),
+    );
+
+    this.paginatorFirst.set(0);
+    this.applyTransforms();
+  }
+
   protected onPageChange(event: { first?: number; rows?: number }) {
     this.paginatorFirst.set(event.first ?? 0);
     this.paginatorRows.set(event.rows ?? this.paginatorRows());
