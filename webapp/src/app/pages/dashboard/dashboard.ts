@@ -1,21 +1,32 @@
-import { AfterViewInit, Component, computed, ElementRef, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule } from 'primeng/paginator';
 import { PanelModule } from 'primeng/panel';
 import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
+import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 
@@ -30,15 +41,18 @@ import { AliasCard } from '../../components/alias-card/alias-card';
     ButtonModule,
     DatePipe,
     DialogModule,
+    FloatLabelModule,
     FormsModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
+    MessageModule,
     MultiSelectModule,
     PaginatorModule,
     PanelModule,
     SelectModule,
     SkeletonModule,
+    TabsModule,
     TagModule,
     ToastModule,
   ],
@@ -47,6 +61,8 @@ import { AliasCard } from '../../components/alias-card/alias-card';
   providers: [MessageService],
 })
 export class Dashboard implements AfterViewInit {
+  @ViewChild('createAliasFormRef') createAliasFormRef!: NgForm;
+
   protected data = signal<any | null>(null);
   protected aliases = signal<any[]>([]);
 
@@ -108,6 +124,16 @@ export class Dashboard implements AfterViewInit {
     return `${selected} of ${total} selected`;
   });
 
+  protected isCreateAliasDialogVisible = signal<boolean>(false);
+  protected createAliasTabValue = signal<'random' | 'domain'>('random');
+  protected isCreatingAlias = signal<boolean>(false);
+
+  protected createAliasForm: any = {
+    randomAliasLabel: '',
+    customAliasAddress: '',
+    customAliasLabel: '',
+  };
+
   private dashboardEl = inject(ElementRef);
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
@@ -140,6 +166,8 @@ export class Dashboard implements AfterViewInit {
           profile: res.profile[0],
           aliases: [...res.random, ...res.domain],
         });
+
+        console.log(this.data());
 
         this.applyTransforms();
       },
@@ -260,6 +288,129 @@ export class Dashboard implements AfterViewInit {
         return typeMatch && blockingMatch && searchMatch;
       }),
     );
+  }
+
+  protected openCreateAliasDialog() {
+    this.createAliasTabValue.set('random');
+
+    this.createAliasForm = {
+      randomAliasLabel: '',
+      customAliasAddress: '',
+      customAliasLabel: '',
+    };
+
+    setTimeout(() => this.createAliasFormRef?.resetForm());
+
+    this.isCreateAliasDialogVisible.set(true);
+  }
+
+  protected onCreateAliasTabChange() {
+    this.createAliasForm = {
+      randomAliasLabel: '',
+      customAliasAddress: '',
+      customAliasLabel: '',
+    };
+
+    setTimeout(() => this.createAliasFormRef?.resetForm());
+  }
+
+  protected createAlias(form: NgForm) {
+    const tab = this.createAliasTabValue();
+
+    if (tab === 'random' && this.data().profile.at_mask_limit) {
+      this.isCreateAliasDialogVisible.set(false);
+
+      this.showMessage({
+        success: false,
+        title: 'Error',
+        message: 'Alias limit reached',
+      });
+
+      return;
+    }
+
+    if (tab === 'domain' && !this.data().profile.has_premium) {
+      this.isCreateAliasDialogVisible.set(false);
+
+      this.showMessage({
+        success: false,
+        title: 'Error',
+        message: 'Custom aliases are only available for Relay Premium subscribers',
+      });
+
+      return;
+    }
+
+    const apiKey = localStorage.getItem('relay-manager-api-key');
+
+    if (!apiKey) return;
+
+    if (tab === 'domain') {
+      if (!this.createAliasForm.customAliasAddress?.trim()) {
+        form.controls['customAliasAddress']?.markAsTouched();
+
+        return;
+      }
+    }
+
+    const maskType = tab === 'domain' ? 'domain' : 'random';
+
+    const body: any = {
+      enabled: true,
+      block_list_emails: false,
+    };
+
+    switch (maskType) {
+      case 'random':
+        body.description = this.createAliasForm.randomAliasLabel || '';
+        break;
+
+      case 'domain':
+        body.description = this.createAliasForm.customAliasLabel || '';
+        break;
+    }
+
+    if (maskType === 'domain') {
+      body.address = this.createAliasForm.customAliasAddress || '';
+    }
+
+    this.isCreatingAlias.set(true);
+
+    this.http
+      .post(`/api/${maskType}?token=${apiKey}`, body)
+      .pipe(
+        switchMap((res: any) => {
+          this.isCreatingAlias.set(false);
+          this.isCreateAliasDialogVisible.set(false);
+
+          this.data.update((data) => ({ ...data, aliases: [...data.aliases, res] }));
+
+          this.applyTransforms();
+
+          this.showMessage({
+            success: true,
+            title: 'Success',
+            message: `Alias ${res.full_address} created`,
+          });
+
+          return this.http.get(`/api/account/profile?token=${apiKey}`);
+        }),
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.data.update((data) => ({ ...data, profile: res[0] }));
+        },
+        error: (_err: HttpErrorResponse) => {
+          this.isCreatingAlias.set(false);
+          this.isCreateAliasDialogVisible.set(false);
+
+          this.showMessage({
+            success: false,
+            title: 'Error',
+            message: 'Alias could not be created',
+          });
+        },
+      });
   }
 
   protected updateAlias(alias: any) {

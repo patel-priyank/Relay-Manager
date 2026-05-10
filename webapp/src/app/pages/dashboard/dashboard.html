@@ -241,6 +241,16 @@
 <p-toast class="max-w-[calc(100%-32px)]" [style]="{ top: '16px', right: '16px' }" />
 
 @if (data()) {
+  <p-button
+    label="Create alias"
+    raised
+    size="large"
+    class="fixed bottom-4 right-4"
+    (click)="openCreateAliasDialog()"
+  />
+}
+
+@if (data()) {
   <p-dialog
     header="Profile"
     [(visible)]="isProfileDialogVisible"
@@ -290,5 +300,136 @@
         </span>
       </div>
     </div>
+  </p-dialog>
+}
+
+@if (data()) {
+  <p-dialog
+    header="Create alias"
+    [(visible)]="isCreateAliasDialogVisible"
+    modal
+    draggable="false"
+    resizable="false"
+    dismissableMask
+    [style]="{ margin: '16px', width: '400px', maxWidth: '100%' }"
+  >
+    <ng-template #closeicon>
+      <p-button icon="ph ph-x" rounded severity="secondary" />
+    </ng-template>
+
+    <form #createAliasFormRef="ngForm" (ngSubmit)="createAlias(createAliasFormRef)">
+      <p-tabs
+        [(value)]="createAliasTabValue"
+        (valueChange)="onCreateAliasTabChange()"
+        class="create-alias-tabs"
+      >
+        <p-tablist>
+          <p-tab value="random">Random</p-tab>
+          <p-tab value="domain">Custom</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+          <p-tabpanel value="random">
+            @if (!data().profile.at_mask_limit) {
+              <div class="flex flex-col gap-4">
+                <p-floatlabel variant="in">
+                  <input
+                    pInputText
+                    id="random-alias-label"
+                    name="randomAliasLabel"
+                    [(ngModel)]="createAliasForm.randomAliasLabel"
+                    autocomplete="off"
+                    fluid
+                  />
+                  <label for="random-alias-label">Label</label>
+                </p-floatlabel>
+              </div>
+            } @else {
+              <div class="flex flex-col items-center gap-4 text-current/50">
+                <i class="ph ph-warning text-5xl"></i>
+
+                <span class="text-center text-balance">
+                  Alias limit reached. Delete an existing alias or upgrade to premium to create
+                  more.
+                </span>
+              </div>
+            }
+          </p-tabpanel>
+
+          <p-tabpanel value="domain">
+            @if (data().profile.has_premium) {
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-2">
+                  <p-floatlabel variant="in">
+                    <input
+                      pInputText
+                      id="custom-alias-address"
+                      name="customAliasAddress"
+                      [(ngModel)]="createAliasForm.customAliasAddress"
+                      autocomplete="off"
+                      fluid
+                      #customAliasAddress="ngModel"
+                      [invalid]="customAliasAddress.invalid && customAliasAddress.touched"
+                      required
+                    />
+                    <label for="custom-alias-address">Address</label>
+                  </p-floatlabel>
+
+                  @if (customAliasAddress.invalid && customAliasAddress.touched) {
+                    <p-message severity="error" size="small" variant="simple" class="px-2">
+                      Address is required.
+                    </p-message>
+                  }
+                </div>
+
+                <p-floatlabel variant="in">
+                  <input
+                    pInputText
+                    id="custom-alias-label"
+                    name="customAliasLabel"
+                    [(ngModel)]="createAliasForm.customAliasLabel"
+                    autocomplete="off"
+                    fluid
+                  />
+                  <label for="custom-alias-label">Label</label>
+                </p-floatlabel>
+              </div>
+            } @else {
+              <div class="flex flex-col items-center gap-4 text-current/50">
+                <i class="ph ph-warning text-5xl"></i>
+
+                <span class="text-center text-balance">
+                  Custom aliases are only available for Relay Premium subscribers.
+                </span>
+              </div>
+            }
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
+    </form>
+
+    <ng-template #footer>
+      <div class="w-full flex gap-4 mt-2">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          fluid
+          class="flex-1"
+          (click)="isCreateAliasDialogVisible.set(false)"
+        />
+
+        <p-button
+          label="Create"
+          fluid
+          [loading]="isCreatingAlias()"
+          class="flex-1"
+          [disabled]="
+            (createAliasTabValue() === 'random' && data().profile.at_mask_limit) ||
+            (createAliasTabValue() === 'domain' && !data().profile.has_premium)
+          "
+          (click)="createAlias(createAliasFormRef)"
+        />
+      </div>
+    </ng-template>
   </p-dialog>
 }
