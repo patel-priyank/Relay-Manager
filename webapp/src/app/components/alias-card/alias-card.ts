@@ -289,9 +289,6 @@ export class AliasCard {
       .delete(`/api/${maskType}/${this.alias().id}?token=${apiKey}`)
       .pipe(
         switchMap((_res: any) => {
-          this.isDeletingAlias.set(false);
-          this.isDeleteAliasDialogVisible.set(false);
-
           return this.http.get(`/api/account/profile?token=${apiKey}`);
         }),
       )
@@ -299,8 +296,11 @@ export class AliasCard {
         next: (res: any) => {
           this.onDeleteAlias.emit({
             alias: this.alias(),
-            profile: res,
+            profile: res[0],
           });
+
+          this.isDeletingAlias.set(false);
+          this.isDeleteAliasDialogVisible.set(false);
 
           this.onShowMessage.emit({
             success: true,

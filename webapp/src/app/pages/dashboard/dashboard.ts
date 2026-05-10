@@ -167,8 +167,6 @@ export class Dashboard implements AfterViewInit {
           aliases: [...res.random, ...res.domain],
         });
 
-        console.log(this.data());
-
         this.applyTransforms();
       },
       error: (_err: HttpErrorResponse) => {
@@ -380,18 +378,9 @@ export class Dashboard implements AfterViewInit {
       .post(`/api/${maskType}?token=${apiKey}`, body)
       .pipe(
         switchMap((res: any) => {
-          this.isCreatingAlias.set(false);
-          this.isCreateAliasDialogVisible.set(false);
-
           this.data.update((data) => ({ ...data, aliases: [...data.aliases, res] }));
 
           this.applyTransforms();
-
-          this.showMessage({
-            success: true,
-            title: 'Success',
-            message: `Alias ${res.full_address} created`,
-          });
 
           return this.http.get(`/api/account/profile?token=${apiKey}`);
         }),
@@ -399,6 +388,15 @@ export class Dashboard implements AfterViewInit {
       .subscribe({
         next: (res: any) => {
           this.data.update((data) => ({ ...data, profile: res[0] }));
+
+          this.isCreatingAlias.set(false);
+          this.isCreateAliasDialogVisible.set(false);
+
+          this.showMessage({
+            success: true,
+            title: 'Success',
+            message: `Alias ${res.full_address} created`,
+          });
         },
         error: (_err: HttpErrorResponse) => {
           this.isCreatingAlias.set(false);
