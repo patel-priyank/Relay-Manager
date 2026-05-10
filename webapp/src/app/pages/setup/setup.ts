@@ -29,7 +29,7 @@ export class Setup {
     const savedApiKey = localStorage.getItem('relay-manager-api-key');
 
     if (savedApiKey) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/dashboard'], { replaceUrl: true });
     }
   }
 
@@ -44,7 +44,7 @@ export class Setup {
 
         localStorage.setItem('relay-manager-api-key', this.apiKey());
 
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard'], { replaceUrl: true });
       },
       error: (err: HttpErrorResponse) => {
         this.isConnecting.set(false);
