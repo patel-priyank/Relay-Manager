@@ -16,9 +16,7 @@ router-outlet + * {
   .p-toast-message-info,
   .p-toast-message-success,
   .p-toast-message-warn,
-  .p-toast-message-error,
-  .p-toast-message-secondary,
-  .p-toast-message-contrast {
+  .p-toast-message-error {
     backdrop-filter: blur(32px);
   }
 }

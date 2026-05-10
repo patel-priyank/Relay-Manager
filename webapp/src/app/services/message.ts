@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 export class Message {
   private messageService = inject(MessageService);
 
-  showMessage(severity: 'success' | 'info' | 'warn' | 'error', title: string, message: string) {
+  showMessage(severity: 'info' | 'success' | 'warn' | 'error', title: string, message: string) {
     this.messageService.clear();
 
     this.messageService.add({
