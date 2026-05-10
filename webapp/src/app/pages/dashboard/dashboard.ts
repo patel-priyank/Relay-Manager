@@ -271,10 +271,11 @@ export class Dashboard implements AfterViewInit {
     this.applyTransforms();
   }
 
-  protected deleteAlias(alias: any) {
+  protected deleteAlias(payload: { alias: any; profile: any }) {
     this.data.update((data) => ({
       ...data,
-      aliases: data.aliases.filter((a: any) => a.id !== alias.id),
+      profile: payload.profile,
+      aliases: data.aliases.filter((a: any) => a.id !== payload.alias.id),
     }));
 
     this.applyTransforms();

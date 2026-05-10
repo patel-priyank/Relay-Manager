@@ -13,6 +13,8 @@ import { DatePipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+import { switchMap } from 'rxjs';
+
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -283,28 +285,38 @@ export class AliasCard {
 
     this.isDeletingAlias.set(true);
 
-    this.http.delete(`/api/${maskType}/${this.alias().id}?token=${apiKey}`).subscribe({
-      next: (_res: any) => {
-        this.isDeletingAlias.set(false);
-        this.isDeleteAliasDialogVisible.set(false);
+    this.http
+      .delete(`/api/${maskType}/${this.alias().id}?token=${apiKey}`)
+      .pipe(
+        switchMap((_res: any) => {
+          this.isDeletingAlias.set(false);
+          this.isDeleteAliasDialogVisible.set(false);
 
-        this.onDeleteAlias.emit(this.alias());
+          return this.http.get(`/api/account/profile?token=${apiKey}`);
+        }),
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.onDeleteAlias.emit({
+            alias: this.alias(),
+            profile: res,
+          });
 
-        this.onShowMessage.emit({
-          success: true,
-          title: 'Success',
-          message: `Alias ${this.alias().full_address} deleted`,
-        });
-      },
-      error: (_err: HttpErrorResponse) => {
-        this.isDeletingAlias.set(false);
+          this.onShowMessage.emit({
+            success: true,
+            title: 'Success',
+            message: `Alias ${this.alias().full_address} deleted`,
+          });
+        },
+        error: (_err: HttpErrorResponse) => {
+          this.isDeletingAlias.set(false);
 
-        this.onShowMessage.emit({
-          success: false,
-          title: 'Error',
-          message: `Alias ${this.alias().full_address} could not be deleted`,
-        });
-      },
-    });
+          this.onShowMessage.emit({
+            success: false,
+            title: 'Error',
+            message: `Alias ${this.alias().full_address} could not be deleted`,
+          });
+        },
+      });
   }
 }
