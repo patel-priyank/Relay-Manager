@@ -11,3 +11,14 @@
 router-outlet + * {
   width: 100%;
 }
+
+.p-toast ::ng-deep {
+  .p-toast-message-info,
+  .p-toast-message-success,
+  .p-toast-message-warn,
+  .p-toast-message-error,
+  .p-toast-message-secondary,
+  .p-toast-message-contrast {
+    backdrop-filter: blur(32px);
+  }
+}

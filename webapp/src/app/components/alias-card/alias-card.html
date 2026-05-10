@@ -20,9 +20,8 @@
             type="text"
             name="alias-label"
             pInputText
-            [ngModel]="aliasLabel()"
-            (ngModelChange)="aliasLabel.set($event)"
-            (keydown)="hideAliasLabelInput($event)"
+            [(ngModel)]="aliasLabel"
+            (keydown)="onKeydown($event)"
             autocomplete="off"
             fluid
           />
@@ -125,61 +124,6 @@
 
 @if (alias()) {
   <p-dialog
-    header="Delete alias?"
-    [(visible)]="isDeleteAliasDialogVisible"
-    modal
-    draggable="false"
-    resizable="false"
-    dismissableMask
-    [style]="{ margin: '16px', width: '400px', maxWidth: '100%' }"
-  >
-    <ng-template #closeicon>
-      <p-button icon="ph ph-x" rounded severity="secondary" />
-    </ng-template>
-
-    <div class="flex flex-col gap-6">
-      <span class="text-lg font-medium break-all">{{ alias().full_address }}</span>
-
-      <p>
-        Once you delete this alias, it cannot be recovered. You will no longer receive any emails
-        sent to it.
-      </p>
-
-      <p>
-        If you use this alias to sign in to any accounts, you should change those account emails
-        before deleting this alias.
-      </p>
-
-      <p-message severity="error" icon="ph ph-warning">
-        <p class="font-normal">This action cannot be undone.</p>
-      </p-message>
-    </div>
-
-    <ng-template #footer>
-      <div class="w-full flex gap-4 mt-2">
-        <p-button
-          label="Cancel"
-          severity="secondary"
-          fluid
-          class="flex-1"
-          (click)="isDeleteAliasDialogVisible.set(false)"
-        />
-
-        <p-button
-          label="Delete"
-          severity="danger"
-          fluid
-          [loading]="isDeletingAlias()"
-          class="flex-1"
-          (click)="deleteAlias()"
-        />
-      </div>
-    </ng-template>
-  </p-dialog>
-}
-
-@if (alias()) {
-  <p-dialog
     header="Statistics"
     [(visible)]="isStatisticsDialogVisible"
     modal
@@ -251,5 +195,60 @@
         </div>
       </div>
     </div>
+  </p-dialog>
+}
+
+@if (alias()) {
+  <p-dialog
+    header="Delete alias?"
+    [(visible)]="isDeleteAliasDialogVisible"
+    modal
+    draggable="false"
+    resizable="false"
+    dismissableMask
+    [style]="{ margin: '16px', width: '400px', maxWidth: '100%' }"
+  >
+    <ng-template #closeicon>
+      <p-button icon="ph ph-x" rounded severity="secondary" />
+    </ng-template>
+
+    <div class="flex flex-col gap-6">
+      <span class="text-lg font-medium break-all">{{ alias().full_address }}</span>
+
+      <p>
+        Once you delete this alias, it cannot be recovered. You will no longer receive any emails
+        sent to it.
+      </p>
+
+      <p>
+        If you use this alias to sign in to any accounts, you should change those account emails
+        before deleting this alias.
+      </p>
+
+      <p-message severity="error" icon="ph ph-warning">
+        <p class="font-normal">This action cannot be undone.</p>
+      </p-message>
+    </div>
+
+    <ng-template #footer>
+      <div class="w-full flex gap-4 mt-2">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          fluid
+          class="flex-1"
+          (click)="isDeleteAliasDialogVisible.set(false)"
+        />
+
+        <p-button
+          label="Delete"
+          severity="danger"
+          fluid
+          [loading]="isDeletingAlias()"
+          class="flex-1"
+          (click)="deleteAlias()"
+        />
+      </div>
+    </ng-template>
   </p-dialog>
 }

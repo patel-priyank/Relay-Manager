@@ -214,7 +214,6 @@
             [isPremiumUser]="data().profile.has_premium"
             (onUpdateAlias)="updateAlias($event)"
             (onDeleteAlias)="deleteAlias($event)"
-            (onShowMessage)="showMessage($event)"
           />
         }
       } @else {
@@ -237,8 +236,6 @@
     }
   </div>
 </div>
-
-<p-toast class="max-w-[calc(100%-32px)]" [style]="{ top: '16px', right: '16px' }" />
 
 @if (data()) {
   <p-button

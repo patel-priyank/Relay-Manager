@@ -12,7 +12,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { forkJoin, switchMap } from 'rxjs';
+import { forkJoin, of, switchMap } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -28,11 +28,10 @@ import { SelectModule } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
-import { ToastModule } from 'primeng/toast';
-
-import { MessageService } from 'primeng/api';
 
 import { AliasCard } from '../../components/alias-card/alias-card';
+
+import { Message } from '../../services/message';
 
 @Component({
   selector: 'app-dashboard',
@@ -54,14 +53,12 @@ import { AliasCard } from '../../components/alias-card/alias-card';
     SkeletonModule,
     TabsModule,
     TagModule,
-    ToastModule,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
-  providers: [MessageService],
 })
 export class Dashboard implements AfterViewInit {
-  @ViewChild('createAliasFormRef') createAliasFormRef!: NgForm;
+  @ViewChild('createAliasFormRef') private createAliasFormRef!: NgForm;
 
   protected data = signal<any | null>(null);
   protected aliases = signal<any[]>([]);
@@ -136,7 +133,7 @@ export class Dashboard implements AfterViewInit {
 
   private dashboardEl = inject(ElementRef);
   private http = inject(HttpClient);
-  private messageService = inject(MessageService);
+  private message = inject(Message);
   private router = inject(Router);
 
   ngAfterViewInit() {
@@ -154,25 +151,34 @@ export class Dashboard implements AfterViewInit {
       return;
     }
 
-    forkJoin({
-      random: this.http.get<any>(`/api/random?token=${savedApiKey}`),
-      domain: this.http.get<any>(`/api/domain?token=${savedApiKey}`),
-      profile: this.http.get<any>(`/api/account/profile?token=${savedApiKey}`),
-      user: this.http.get<any>(`/api/account/user?token=${savedApiKey}`),
-    }).subscribe({
-      next: (res) => {
-        this.data.set({
-          email: res.user[0].email,
-          profile: res.profile[0],
-          aliases: [...res.random, ...res.domain],
-        });
+    this.http
+      .get(`/api/account/user?token=${savedApiKey}`)
+      .pipe(
+        switchMap((res: any) => {
+          return forkJoin({
+            user: of(res),
+            profile: this.http.get(`/api/account/profile?token=${savedApiKey}`),
+            random: this.http.get(`/api/random?token=${savedApiKey}`),
+            domain: this.http.get(`/api/domain?token=${savedApiKey}`),
+          });
+        }),
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.data.set({
+            email: res.user[0].email,
+            profile: res.profile[0],
+            aliases: [...res.random, ...res.domain],
+          });
 
-        this.applyTransforms();
-      },
-      error: (_err: HttpErrorResponse) => {
-        this.disconnect();
-      },
-    });
+          this.applyTransforms();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.disconnect();
+
+          this.message.showMessage('error', 'Error', err.error.error);
+        },
+      });
   }
 
   protected disconnect() {
@@ -313,28 +319,24 @@ export class Dashboard implements AfterViewInit {
   }
 
   protected createAlias(form: NgForm) {
-    const tab = this.createAliasTabValue();
+    const tabValue = this.createAliasTabValue();
 
-    if (tab === 'random' && this.data().profile.at_mask_limit) {
+    if (tabValue === 'random' && this.data().profile.at_mask_limit) {
       this.isCreateAliasDialogVisible.set(false);
 
-      this.showMessage({
-        success: false,
-        title: 'Error',
-        message: 'Alias limit reached',
-      });
+      this.message.showMessage('error', 'Error', 'Alias limit reached');
 
       return;
     }
 
-    if (tab === 'domain' && !this.data().profile.has_premium) {
+    if (tabValue === 'domain' && !this.data().profile.has_premium) {
       this.isCreateAliasDialogVisible.set(false);
 
-      this.showMessage({
-        success: false,
-        title: 'Error',
-        message: 'Custom aliases are only available for Relay Premium subscribers',
-      });
+      this.message.showMessage(
+        'error',
+        'Error',
+        'Custom aliases are only available for Relay Premium subscribers',
+      );
 
       return;
     }
@@ -343,7 +345,7 @@ export class Dashboard implements AfterViewInit {
 
     if (!apiKey) return;
 
-    if (tab === 'domain') {
+    if (tabValue === 'domain') {
       if (!this.createAliasForm.customAliasAddress?.trim()) {
         form.controls['customAliasAddress']?.markAsTouched();
 
@@ -351,7 +353,7 @@ export class Dashboard implements AfterViewInit {
       }
     }
 
-    const maskType = tab === 'domain' ? 'domain' : 'random';
+    const maskType = tabValue;
 
     const body: any = {
       enabled: true,
@@ -364,12 +366,9 @@ export class Dashboard implements AfterViewInit {
         break;
 
       case 'domain':
+        body.address = this.createAliasForm.customAliasAddress || '';
         body.description = this.createAliasForm.customAliasLabel || '';
         break;
-    }
-
-    if (maskType === 'domain') {
-      body.address = this.createAliasForm.customAliasAddress || '';
     }
 
     this.isCreatingAlias.set(true);
@@ -392,21 +391,13 @@ export class Dashboard implements AfterViewInit {
           this.isCreatingAlias.set(false);
           this.isCreateAliasDialogVisible.set(false);
 
-          this.showMessage({
-            success: true,
-            title: 'Success',
-            message: `Alias ${res.full_address} created`,
-          });
+          this.message.showMessage('success', 'Success', `Alias ${res.full_address} created`);
         },
         error: (_err: HttpErrorResponse) => {
           this.isCreatingAlias.set(false);
           this.isCreateAliasDialogVisible.set(false);
 
-          this.showMessage({
-            success: false,
-            title: 'Error',
-            message: 'Alias could not be created',
-          });
+          this.message.showMessage('error', 'Error', 'Alias could not be created');
         },
       });
   }
@@ -428,15 +419,5 @@ export class Dashboard implements AfterViewInit {
     }));
 
     this.applyTransforms();
-  }
-
-  protected showMessage(message: { success: boolean; title: string; message: string }) {
-    this.messageService.clear();
-
-    this.messageService.add({
-      severity: message.success ? 'success' : 'error',
-      summary: message.title,
-      detail: message.message,
-    });
   }
 }

@@ -44,19 +44,8 @@
   }
 }
 
-.p-toast ::ng-deep {
-  .p-toast-message-info,
-  .p-toast-message-success,
-  .p-toast-message-warn,
-  .p-toast-message-error,
-  .p-toast-message-secondary,
-  .p-toast-message-contrast {
-    backdrop-filter: blur(32px);
-  }
-}
-
 .create-alias-tabs ::ng-deep {
   .p-tabpanels {
-    padding: 20px 8px 0px;
+    padding: 20px 0px 0px;
   }
 }

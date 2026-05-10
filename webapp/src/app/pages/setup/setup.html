@@ -18,9 +18,7 @@
       <p-password
         name="apiKey"
         placeholder="API Key"
-        [ngModel]="apiKey()"
-        (ngModelChange)="apiKey.set($event)"
-        (input)="error.set('')"
+        [(ngModel)]="apiKey"
         toggleMask
         autocomplete="off"
         feedback="false"
@@ -36,14 +34,6 @@
         [disabled]="!apiKey().trim()"
         (click)="connect()"
       />
-
-      @if (error()) {
-        <p-message severity="error" class="justify-center">
-          <p class="text-center text-balance font-normal">
-            {{ error() }}
-          </p>
-        </p-message>
-      }
     </form>
 
     <ng-template #footer>

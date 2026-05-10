@@ -9,6 +9,8 @@ import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 
+import { Message } from '../../services/message';
+
 @Component({
   selector: 'app-setup',
   imports: [AvatarModule, ButtonModule, CardModule, FormsModule, MessageModule, PasswordModule],
@@ -17,10 +19,10 @@ import { PasswordModule } from 'primeng/password';
 })
 export class Setup {
   protected apiKey = signal('');
-  protected error = signal('');
   protected isConnecting = signal(false);
 
   private http = inject(HttpClient);
+  private message = inject(Message);
   private router = inject(Router);
 
   constructor() {
@@ -35,7 +37,6 @@ export class Setup {
     if (!this.apiKey().trim()) return;
 
     this.isConnecting.set(true);
-    this.error.set('');
 
     this.http.get(`/api/account/user?token=${this.apiKey()}`).subscribe({
       next: (_res: any) => {
@@ -48,7 +49,7 @@ export class Setup {
       error: (err: HttpErrorResponse) => {
         this.isConnecting.set(false);
 
-        this.error.set(err.error.error);
+        this.message.showMessage('error', 'Error', err.error.error);
       },
     });
   }

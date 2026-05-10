@@ -23,20 +23,16 @@ import { ToolbarModule } from 'primeng/toolbar';
   styleUrl: './header.scss',
 })
 export class Header implements OnDestroy {
-  @ViewChild('settingsBtnRef') settingsBtnRef!: Button;
-  @ViewChild('closeBtnRef') closeBtnRef!: Button;
-  @ViewChild('drawerRef') drawerRef!: Drawer;
+  @ViewChild('settingsBtnRef') private settingsBtnRef!: Button;
+  @ViewChild('closeBtnRef') private closeBtnRef!: Button;
+  @ViewChild('drawerRef') private drawerRef!: Drawer;
 
   protected isDrawerVisible = signal<boolean>(false);
   protected theme = signal<string>('system');
 
   private isSystemDarkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-  private systemThemeChangeListener = () => {
-    if (this.theme() === 'system') {
-      this.applyTheme();
-    }
-  };
+  private initialThemeApplied = false;
 
   constructor() {
     const savedTheme = localStorage.getItem('relay-manager-theme') || 'system';
@@ -56,7 +52,11 @@ export class Header implements OnDestroy {
     this.isSystemDarkMediaQuery.removeEventListener('change', this.systemThemeChangeListener);
   }
 
-  private initialThemeApplied = false;
+  private systemThemeChangeListener = () => {
+    if (this.theme() === 'system') {
+      this.applyTheme();
+    }
+  };
 
   private applyTheme() {
     const applyClasses = () => {

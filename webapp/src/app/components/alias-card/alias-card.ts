@@ -24,6 +24,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 
+import { Message } from '../../services/message';
+
 @Component({
   selector: 'app-alias-card',
   imports: [
@@ -42,14 +44,13 @@ import { TagModule } from 'primeng/tag';
   styleUrl: './alias-card.scss',
 })
 export class AliasCard {
-  @ViewChild('aliasLabelInputRef') aliasLabelInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('aliasLabelInputRef') private aliasLabelInputRef!: ElementRef<HTMLInputElement>;
 
   alias = input<any | undefined>(undefined);
   isPremiumUser = input<boolean>(false);
 
   onUpdateAlias = output<any>();
   onDeleteAlias = output<any>();
-  onShowMessage = output<{ success: boolean; title: string; message: string }>();
 
   protected blockingLevels = computed(() => [
     {
@@ -89,6 +90,7 @@ export class AliasCard {
   protected isSavingBlockingLevel = signal<boolean>(false);
 
   private http = inject(HttpClient);
+  private message = inject(Message);
 
   constructor() {
     effect(() => {
@@ -116,7 +118,7 @@ export class AliasCard {
     setTimeout(() => this.aliasLabelInputRef.nativeElement.focus());
   }
 
-  protected hideAliasLabelInput(event: KeyboardEvent) {
+  protected onKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
       this.isAliasLabelEditable.set(false);
     }
@@ -157,20 +159,20 @@ export class AliasCard {
 
         this.onUpdateAlias.emit(res);
 
-        this.onShowMessage.emit({
-          success: true,
-          title: 'Success',
-          message: `Label updated for ${this.alias().full_address}`,
-        });
+        this.message.showMessage(
+          'success',
+          'Success',
+          `Label updated for ${this.alias().full_address}`,
+        );
       },
       error: (_err: HttpErrorResponse) => {
         this.isSavingAliasLabel.set(false);
 
-        this.onShowMessage.emit({
-          success: false,
-          title: 'Error',
-          message: `Label could not be updated for ${this.alias().full_address}`,
-        });
+        this.message.showMessage(
+          'error',
+          'Error',
+          `Label could not be updated for ${this.alias().full_address}`,
+        );
       },
     });
   }
@@ -178,24 +180,20 @@ export class AliasCard {
   protected copyAddress() {
     navigator.clipboard.writeText(this.alias().full_address);
 
-    this.onShowMessage.emit({
-      success: true,
-      title: 'Success',
-      message: 'Copied alias address to clipboard',
-    });
+    this.message.showMessage('success', 'Success', 'Copied alias address to clipboard');
   }
 
   protected updateBlockingLevel(blockingLevel: string) {
     if (!this.isPremiumUser() && blockingLevel === 'promo') {
-      this.onShowMessage.emit({
-        success: false,
-        title: 'Error',
-        message: 'Promotions blocking level is only available for Relay Premium subscribers',
-      });
-
       this.blockingLevel.set(blockingLevel);
 
       setTimeout(() => this.setBlockingLevel());
+
+      this.message.showMessage(
+        'error',
+        'Error',
+        'Promotions blocking level is only available for Relay Premium subscribers',
+      );
 
       return;
     }
@@ -245,22 +243,22 @@ export class AliasCard {
 
         this.onUpdateAlias.emit(res);
 
-        this.onShowMessage.emit({
-          success: true,
-          title: 'Success',
-          message: `Blocking level updated for ${this.alias().full_address}`,
-        });
+        this.message.showMessage(
+          'success',
+          'Success',
+          `Blocking level updated for ${this.alias().full_address}`,
+        );
       },
       error: (_err: HttpErrorResponse) => {
         this.isSavingBlockingLevel.set(false);
 
         this.setBlockingLevel();
 
-        this.onShowMessage.emit({
-          success: false,
-          title: 'Error',
-          message: `Blocking level could not be updated for ${this.alias().full_address}`,
-        });
+        this.message.showMessage(
+          'error',
+          'Error',
+          `Blocking level could not be updated for ${this.alias().full_address}`,
+        );
       },
     });
   }
@@ -302,20 +300,20 @@ export class AliasCard {
           this.isDeletingAlias.set(false);
           this.isDeleteAliasDialogVisible.set(false);
 
-          this.onShowMessage.emit({
-            success: true,
-            title: 'Success',
-            message: `Alias ${this.alias().full_address} deleted`,
-          });
+          this.message.showMessage(
+            'success',
+            'Success',
+            `Alias ${this.alias().full_address} deleted`,
+          );
         },
         error: (_err: HttpErrorResponse) => {
           this.isDeletingAlias.set(false);
 
-          this.onShowMessage.emit({
-            success: false,
-            title: 'Error',
-            message: `Alias ${this.alias().full_address} could not be deleted`,
-          });
+          this.message.showMessage(
+            'error',
+            'Error',
+            `Alias ${this.alias().full_address} could not be deleted`,
+          );
         },
       });
   }
