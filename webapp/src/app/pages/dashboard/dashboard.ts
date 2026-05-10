@@ -381,17 +381,20 @@ export class Dashboard implements AfterViewInit {
 
           this.applyTransforms();
 
-          return this.http.get(`/api/account/profile?token=${apiKey}`);
+          return forkJoin({
+            alias: of(res),
+            profile: this.http.get(`/api/account/profile?token=${apiKey}`),
+          });
         }),
       )
       .subscribe({
         next: (res: any) => {
-          this.data.update((data) => ({ ...data, profile: res[0] }));
+          this.data.update((data) => ({ ...data, profile: res.profile[0] }));
 
           this.isCreatingAlias.set(false);
           this.isCreateAliasDialogVisible.set(false);
 
-          this.message.showMessage('success', 'Success', `Alias ${res.full_address} created`);
+          this.message.showMessage('success', 'Success', `Alias ${res.alias.full_address} created`);
         },
         error: (_err: HttpErrorResponse) => {
           this.isCreatingAlias.set(false);
