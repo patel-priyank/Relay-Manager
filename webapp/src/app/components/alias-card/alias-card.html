@@ -87,9 +87,7 @@
       >
         <ng-template #item let-item>
           @if (item.value === blockingLevel() && isSavingBlockingLevel()) {
-            <span class="flex text-2xl">
-              <i class="ph ph-circle-notch animate-spin"></i>
-            </span>
+            <p-button severity="secondary" size="small" text loading />
           } @else {
             <span>{{ item.label }}</span>
           }
