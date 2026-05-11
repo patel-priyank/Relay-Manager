@@ -49,7 +49,7 @@ export class Setup {
       error: (err: HttpErrorResponse) => {
         this.isConnecting.set(false);
 
-        this.message.showMessage('error', 'Error', err.error.error);
+        this.message.showMessage('error', 'Error', err.error.error || 'Something went wrong');
       },
     });
   }

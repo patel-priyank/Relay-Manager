@@ -176,7 +176,7 @@ export class Dashboard implements AfterViewInit {
         error: (err: HttpErrorResponse) => {
           this.disconnect();
 
-          this.message.showMessage('error', 'Error', err.error.error);
+          this.message.showMessage('error', 'Error', err.error.error || 'Something went wrong');
         },
       });
   }
