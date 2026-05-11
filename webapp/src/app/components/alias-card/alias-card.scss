@@ -1,12 +1,12 @@
 .blocking-levels ::ng-deep {
   .p-togglebutton-content {
     border-radius: 3px;
+  }
 
-    .p-button {
-      display: flex;
-      height: 24px;
-      width: 24px;
-      opacity: 1;
-    }
+  .p-button {
+    display: flex;
+    height: 24px;
+    width: 24px;
+    opacity: 1;
   }
 }
