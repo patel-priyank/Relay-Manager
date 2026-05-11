@@ -4,6 +4,7 @@ import {
   computed,
   ElementRef,
   inject,
+  OnDestroy,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -57,7 +58,7 @@ import { Message } from '../../services/message';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
-export class Dashboard implements AfterViewInit {
+export class Dashboard implements AfterViewInit, OnDestroy {
   @ViewChild('createAliasFormRef') private createAliasFormRef!: NgForm;
 
   protected data = signal<any | null>(null);
@@ -140,6 +141,12 @@ export class Dashboard implements AfterViewInit {
     this.dashboardEl.nativeElement
       .querySelector('.filter-dropdown input')
       .setAttribute('inputmode', 'none');
+
+    document.addEventListener('visibilitychange', this.onVisibilityChange);
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('visibilitychange', this.onVisibilityChange);
   }
 
   constructor() {
@@ -180,6 +187,16 @@ export class Dashboard implements AfterViewInit {
         },
       });
   }
+
+  private onVisibilityChange = () => {
+    if (!document.hidden) {
+      const active = document.activeElement as HTMLElement | null;
+
+      if (active?.closest('.filter-dropdown')) {
+        active.blur();
+      }
+    }
+  };
 
   protected disconnect() {
     localStorage.removeItem('relay-manager-api-key');
