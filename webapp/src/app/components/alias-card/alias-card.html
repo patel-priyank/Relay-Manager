@@ -35,10 +35,10 @@
             />
 
             <p-button
-              icon="ph {{ isSavingAliasLabel() ? 'ph-circle-notch animate-spin' : 'ph-check' }}"
+              icon="ph ph-check"
               severity="success"
               size="small"
-              [disabled]="isSavingAliasLabel()"
+              [loading]="isSavingAliasLabel()"
               (click)="updateAliasLabel()"
             />
           </div>
