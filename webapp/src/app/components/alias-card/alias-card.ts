@@ -13,13 +13,10 @@ import { DatePipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-import { switchMap } from 'rxjs';
-
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
@@ -35,7 +32,6 @@ import { Message } from '../../services/message';
     DialogModule,
     FormsModule,
     InputTextModule,
-    MessageModule,
     SelectButtonModule,
     SkeletonModule,
     TagModule,
@@ -50,7 +46,7 @@ export class AliasCard {
   isPremiumUser = input<boolean>(false);
 
   onUpdateAlias = output<any>();
-  onDeleteAlias = output<any>();
+  onRequestDeleteAlias = output<any>();
 
   protected blockingLevels = computed(() => [
     {
@@ -78,9 +74,6 @@ export class AliasCard {
   ]);
 
   protected isStatisticsDialogVisible = signal<boolean>(false);
-
-  protected isDeleteAliasDialogVisible = signal<boolean>(false);
-  protected isDeletingAlias = signal<boolean>(false);
 
   protected aliasLabel = signal<string>('');
   protected isAliasLabelEditable = signal<boolean>(false);
@@ -263,58 +256,4 @@ export class AliasCard {
     });
   }
 
-  protected deleteAlias() {
-    const apiKey = localStorage.getItem('relay-manager-api-key');
-
-    if (!this.alias()) return;
-    if (!apiKey) return;
-
-    let maskType = '';
-
-    switch (this.alias().mask_type) {
-      case 'random':
-        maskType = 'random';
-        break;
-
-      case 'custom':
-        maskType = 'domain';
-        break;
-    }
-
-    this.isDeletingAlias.set(true);
-
-    this.http
-      .delete(`/api/${maskType}/${this.alias().id}?token=${apiKey}`)
-      .pipe(
-        switchMap((_res: any) => {
-          return this.http.get(`/api/account/profile?token=${apiKey}`);
-        }),
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.onDeleteAlias.emit({
-            alias: this.alias(),
-            profile: res[0],
-          });
-
-          this.isDeletingAlias.set(false);
-          this.isDeleteAliasDialogVisible.set(false);
-
-          this.message.showMessage(
-            'success',
-            'Success',
-            `Alias ${this.alias().full_address} deleted`,
-          );
-        },
-        error: (_err: HttpErrorResponse) => {
-          this.isDeletingAlias.set(false);
-
-          this.message.showMessage(
-            'error',
-            'Error',
-            `Alias ${this.alias().full_address} could not be deleted`,
-          );
-        },
-      });
-  }
 }

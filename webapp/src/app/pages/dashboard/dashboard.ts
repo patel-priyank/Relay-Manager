@@ -122,6 +122,10 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     return `${selected} of ${total} selected`;
   });
 
+  protected isDeleteAliasDialogVisible = signal<boolean>(false);
+  protected isDeletingAlias = signal<boolean>(false);
+  protected aliasToDelete = signal<any | null>(null);
+
   protected isCreateAliasDialogVisible = signal<boolean>(false);
   protected createAliasTabValue = signal<'random' | 'domain'>('random');
   protected isCreatingAlias = signal<boolean>(false);
@@ -431,13 +435,67 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     this.applyTransforms();
   }
 
-  protected deleteAlias(payload: { alias: any; profile: any }) {
-    this.data.update((data) => ({
-      ...data,
-      profile: payload.profile,
-      aliases: data.aliases.filter((a: any) => a.id !== payload.alias.id),
-    }));
+  protected requestDeleteAlias(alias: any) {
+    this.aliasToDelete.set(alias);
+    this.isDeleteAliasDialogVisible.set(true);
+  }
 
-    this.applyTransforms();
+  protected confirmDeleteAlias() {
+    const alias = this.aliasToDelete();
+    const apiKey = localStorage.getItem('relay-manager-api-key');
+
+    if (!alias) return;
+    if (!apiKey) return;
+
+    let maskType = '';
+
+    switch (alias.mask_type) {
+      case 'random':
+        maskType = 'random';
+        break;
+
+      case 'custom':
+        maskType = 'domain';
+        break;
+    }
+
+    this.isDeletingAlias.set(true);
+
+    this.http
+      .delete(`/api/${maskType}/${alias.id}?token=${apiKey}`)
+      .pipe(
+        switchMap((_res: any) => {
+          this.data.update((data) => ({
+            ...data,
+            aliases: data.aliases.filter((a: any) => a.id !== alias.id),
+          }));
+
+          this.applyTransforms();
+
+          return this.http.get(`/api/account/profile?token=${apiKey}`);
+        }),
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.data.update((data) => ({
+            ...data,
+            profile: res[0],
+          }));
+
+          this.isDeletingAlias.set(false);
+          this.isDeleteAliasDialogVisible.set(false);
+
+          this.message.showMessage('success', 'Success', `Alias ${alias.full_address} deleted`);
+        },
+        error: (_err: HttpErrorResponse) => {
+          this.isDeletingAlias.set(false);
+
+          this.message.showMessage(
+            'error',
+            'Error',
+            `Alias ${alias.full_address} could not be deleted`,
+          );
+        },
+      });
   }
 }

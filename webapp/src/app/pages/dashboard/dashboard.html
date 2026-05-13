@@ -213,7 +213,7 @@
             [alias]="alias"
             [isPremiumUser]="data().profile.has_premium"
             (onUpdateAlias)="updateAlias($event)"
-            (onDeleteAlias)="deleteAlias($event)"
+            (onRequestDeleteAlias)="requestDeleteAlias($event)"
           />
         }
       } @else {
@@ -297,6 +297,62 @@
         </span>
       </div>
     </div>
+  </p-dialog>
+}
+
+@if (aliasToDelete()) {
+  <p-dialog
+    header="Delete alias?"
+    [(visible)]="isDeleteAliasDialogVisible"
+    (onHide)="aliasToDelete.set(null)"
+    modal
+    draggable="false"
+    resizable="false"
+    dismissableMask
+    [style]="{ margin: '16px', width: '400px', maxWidth: '100%' }"
+  >
+    <ng-template #closeicon>
+      <p-button icon="ph ph-x" rounded severity="secondary" />
+    </ng-template>
+
+    <div class="flex flex-col gap-6">
+      <span class="text-lg font-medium break-all">{{ aliasToDelete().full_address }}</span>
+
+      <p>
+        Once you delete this alias, it cannot be recovered. You will no longer receive any emails
+        sent to it.
+      </p>
+
+      <p>
+        If you use this alias to sign in to any accounts, you should change those account emails
+        before deleting this alias.
+      </p>
+
+      <p-message severity="error" icon="ph ph-warning">
+        <p class="font-normal">This action cannot be undone.</p>
+      </p-message>
+    </div>
+
+    <ng-template #footer>
+      <div class="w-full flex gap-4 mt-2">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          fluid
+          class="flex-1"
+          (click)="isDeleteAliasDialogVisible.set(false)"
+        />
+
+        <p-button
+          label="Delete"
+          severity="danger"
+          fluid
+          [loading]="isDeletingAlias()"
+          class="flex-1"
+          (click)="confirmDeleteAlias()"
+        />
+      </div>
+    </ng-template>
   </p-dialog>
 }
 
