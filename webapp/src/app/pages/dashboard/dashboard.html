@@ -42,7 +42,13 @@
       }
 
       <div class="flex gap-2">
-        <p-button severity="secondary" icon="ph ph-arrow-clockwise" (click)="refresh()" />
+        <p-button
+          severity="secondary"
+          icon="ph ph-arrow-clockwise"
+          [disabled]="!data()"
+          (click)="refresh()"
+        />
+
         <p-button label="Disconnect" icon="ph ph-link-simple-break" (click)="disconnect()" />
       </div>
     </div>
