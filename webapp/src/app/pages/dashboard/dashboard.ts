@@ -154,6 +154,10 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   }
 
   constructor() {
+    this.loadData();
+  }
+
+  private loadData() {
     const savedApiKey = localStorage.getItem('relay-manager-api-key');
 
     if (!savedApiKey) {
@@ -161,6 +165,9 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
       return;
     }
+
+    this.data.set(null);
+    this.aliases.set([]);
 
     this.http
       .get(`/api/account/user?token=${savedApiKey}`)
@@ -206,6 +213,10 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     localStorage.removeItem('relay-manager-api-key');
 
     this.router.navigate(['/'], { replaceUrl: true });
+  }
+
+  protected refresh() {
+    this.loadData();
   }
 
   protected onSearchChange(query: string) {
