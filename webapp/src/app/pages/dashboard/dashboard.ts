@@ -169,6 +169,8 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     this.data.set(null);
     this.aliases.set([]);
 
+    this.paginatorFirst.set(0);
+
     this.http
       .get('/api/account/user', {
         headers: { Authorization: `Token ${savedApiKey}` },
