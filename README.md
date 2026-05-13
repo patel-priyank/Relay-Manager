@@ -115,7 +115,7 @@ If `API_URL` is not set, the app falls back to relative `/api` paths, which is s
 | Icons              | Phosphor Icons                      |
 | Styling            | Tailwind CSS (browser build) + SCSS |
 | API proxy          | Express 5 + TypeScript              |
-| Hosting (webapp)   | Vercel                              |
+| Hosting            | Vercel                              |
 
 ## Privacy
 

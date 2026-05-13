@@ -29,18 +29,18 @@
 
           <div class="flex items-center gap-2">
             <p-button
-              icon="ph ph-x"
-              severity="secondary"
-              size="small"
-              (click)="isAliasLabelEditable.set(false)"
-            />
-
-            <p-button
               icon="ph ph-check"
               severity="success"
               size="small"
               [loading]="isSavingAliasLabel()"
               (click)="updateAliasLabel()"
+            />
+
+            <p-button
+              icon="ph ph-x"
+              severity="secondary"
+              size="small"
+              (click)="isAliasLabelEditable.set(false)"
             />
           </div>
         } @else {
@@ -196,4 +196,3 @@
     </div>
   </p-dialog>
 }
-
