@@ -38,19 +38,23 @@ export class Setup {
 
     this.isConnecting.set(true);
 
-    this.http.get(`/api/account/user?token=${this.apiKey()}`).subscribe({
-      next: (_res: any) => {
-        this.isConnecting.set(false);
+    this.http
+      .get('/api/account/user', {
+        headers: { Authorization: `Token ${this.apiKey()}` },
+      })
+      .subscribe({
+        next: (_res: any) => {
+          this.isConnecting.set(false);
 
-        localStorage.setItem('relay-manager-api-key', this.apiKey());
+          localStorage.setItem('relay-manager-api-key', this.apiKey());
 
-        this.router.navigate(['/dashboard'], { replaceUrl: true });
-      },
-      error: (err: HttpErrorResponse) => {
-        this.isConnecting.set(false);
+          this.router.navigate(['/dashboard'], { replaceUrl: true });
+        },
+        error: (err: HttpErrorResponse) => {
+          this.isConnecting.set(false);
 
-        this.message.showMessage('error', 'Error', err.error.error || 'Something went wrong');
-      },
-    });
+          this.message.showMessage('error', 'Error', err.error.error || 'Something went wrong');
+        },
+      });
   }
 }

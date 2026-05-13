@@ -5,7 +5,7 @@ export const handleRelayRequest = async (req: Request, res: Response, endpoint: 
     const url = 'https://relay.firefox.com/api/v1/' + endpoint;
 
     const headers: Record<string, string> = {
-      Authorization: `Token ${req.query.token}`
+      Authorization: req.headers['authorization'] as string
     };
 
     const fetchOptions: RequestInit = {

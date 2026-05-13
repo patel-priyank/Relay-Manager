@@ -170,14 +170,22 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     this.aliases.set([]);
 
     this.http
-      .get(`/api/account/user?token=${savedApiKey}`)
+      .get('/api/account/user', {
+        headers: { Authorization: `Token ${savedApiKey}` },
+      })
       .pipe(
         switchMap((res: any) => {
           return forkJoin({
             user: of(res),
-            profile: this.http.get(`/api/account/profile?token=${savedApiKey}`),
-            random: this.http.get(`/api/random?token=${savedApiKey}`),
-            domain: this.http.get(`/api/domain?token=${savedApiKey}`),
+            profile: this.http.get('/api/account/profile', {
+              headers: { Authorization: `Token ${savedApiKey}` },
+            }),
+            random: this.http.get('/api/random', {
+              headers: { Authorization: `Token ${savedApiKey}` },
+            }),
+            domain: this.http.get('/api/domain', {
+              headers: { Authorization: `Token ${savedApiKey}` },
+            }),
           });
         }),
       )
@@ -406,7 +414,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     this.isCreatingAlias.set(true);
 
     this.http
-      .post(`/api/${maskType}?token=${apiKey}`, body)
+      .post(`/api/${maskType}`, body, { headers: { Authorization: `Token ${apiKey}` } })
       .pipe(
         switchMap((res: any) => {
           this.data.update((data) => ({ ...data, aliases: [...data.aliases, res] }));
@@ -415,7 +423,9 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
           return forkJoin({
             alias: of(res),
-            profile: this.http.get(`/api/account/profile?token=${apiKey}`),
+            profile: this.http.get('/api/account/profile', {
+              headers: { Authorization: `Token ${apiKey}` },
+            }),
           });
         }),
       )
@@ -473,7 +483,9 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     this.isDeletingAlias.set(true);
 
     this.http
-      .delete(`/api/${maskType}/${alias.id}?token=${apiKey}`)
+      .delete(`/api/${maskType}/${alias.id}`, {
+        headers: { Authorization: `Token ${apiKey}` },
+      })
       .pipe(
         switchMap((_res: any) => {
           this.data.update((data) => ({
@@ -483,7 +495,9 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
           this.applyTransforms();
 
-          return this.http.get(`/api/account/profile?token=${apiKey}`);
+          return this.http.get('/api/account/profile', {
+            headers: { Authorization: `Token ${apiKey}` },
+          });
         }),
       )
       .subscribe({

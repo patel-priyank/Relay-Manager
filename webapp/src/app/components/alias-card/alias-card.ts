@@ -145,29 +145,33 @@ export class AliasCard {
 
     this.isSavingAliasLabel.set(true);
 
-    this.http.patch(`/api/${maskType}/${this.alias().id}?token=${apiKey}`, body).subscribe({
-      next: (res: any) => {
-        this.isSavingAliasLabel.set(false);
-        this.isAliasLabelEditable.set(false);
+    this.http
+      .patch(`/api/${maskType}/${this.alias().id}`, body, {
+        headers: { Authorization: `Token ${apiKey}` },
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.isSavingAliasLabel.set(false);
+          this.isAliasLabelEditable.set(false);
 
-        this.onUpdateAlias.emit(res);
+          this.onUpdateAlias.emit(res);
 
-        this.message.showMessage(
-          'success',
-          'Success',
-          `Label updated for ${this.alias().full_address}`,
-        );
-      },
-      error: (_err: HttpErrorResponse) => {
-        this.isSavingAliasLabel.set(false);
+          this.message.showMessage(
+            'success',
+            'Success',
+            `Label updated for ${this.alias().full_address}`,
+          );
+        },
+        error: (_err: HttpErrorResponse) => {
+          this.isSavingAliasLabel.set(false);
 
-        this.message.showMessage(
-          'error',
-          'Error',
-          `Label could not be updated for ${this.alias().full_address}`,
-        );
-      },
-    });
+          this.message.showMessage(
+            'error',
+            'Error',
+            `Label could not be updated for ${this.alias().full_address}`,
+          );
+        },
+      });
   }
 
   protected copyAddress() {
@@ -230,30 +234,33 @@ export class AliasCard {
 
     this.isSavingBlockingLevel.set(true);
 
-    this.http.patch(`/api/${maskType}/${this.alias().id}?token=${apiKey}`, body).subscribe({
-      next: (res: any) => {
-        this.isSavingBlockingLevel.set(false);
+    this.http
+      .patch(`/api/${maskType}/${this.alias().id}`, body, {
+        headers: { Authorization: `Token ${apiKey}` },
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.isSavingBlockingLevel.set(false);
 
-        this.onUpdateAlias.emit(res);
+          this.onUpdateAlias.emit(res);
 
-        this.message.showMessage(
-          'success',
-          'Success',
-          `Blocking level updated for ${this.alias().full_address}`,
-        );
-      },
-      error: (_err: HttpErrorResponse) => {
-        this.isSavingBlockingLevel.set(false);
+          this.message.showMessage(
+            'success',
+            'Success',
+            `Blocking level updated for ${this.alias().full_address}`,
+          );
+        },
+        error: (_err: HttpErrorResponse) => {
+          this.isSavingBlockingLevel.set(false);
 
-        this.setBlockingLevel();
+          this.setBlockingLevel();
 
-        this.message.showMessage(
-          'error',
-          'Error',
-          `Blocking level could not be updated for ${this.alias().full_address}`,
-        );
-      },
-    });
+          this.message.showMessage(
+            'error',
+            'Error',
+            `Blocking level could not be updated for ${this.alias().full_address}`,
+          );
+        },
+      });
   }
-
 }
