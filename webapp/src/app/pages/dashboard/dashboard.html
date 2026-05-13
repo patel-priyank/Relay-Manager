@@ -391,6 +391,7 @@
                     id="random-alias-label"
                     name="randomAliasLabel"
                     [(ngModel)]="createAliasForm.randomAliasLabel"
+                    [disabled]="isCreatingAlias()"
                     autocomplete="off"
                     fluid
                   />
@@ -423,6 +424,7 @@
                       fluid
                       #customAliasAddress="ngModel"
                       [invalid]="customAliasAddress.invalid && customAliasAddress.touched"
+                      [disabled]="isCreatingAlias()"
                       required
                     />
                     <label for="custom-alias-address">Address</label>
@@ -441,6 +443,7 @@
                     id="custom-alias-label"
                     name="customAliasLabel"
                     [(ngModel)]="createAliasForm.customAliasLabel"
+                    [disabled]="isCreatingAlias()"
                     autocomplete="off"
                     fluid
                   />
