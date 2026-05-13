@@ -44,6 +44,10 @@
   }
 }
 
+.delete-alias-message.p-message-enter-active ::ng-deep {
+  animation-duration: 0ms;
+}
+
 .create-alias-tabs ::ng-deep {
   .p-tabpanels {
     padding: 20px 0px 0px;
