@@ -126,7 +126,7 @@ If `API_URL` is not set, the app falls back to relative `/api` paths, which is s
 
 ## Contributing
 
-Issues and pull requests are welcome. Please open an issue first for significant changes.
+Issues and pull requests are welcome. Open an issue first for significant changes.
 
 ## License
 
