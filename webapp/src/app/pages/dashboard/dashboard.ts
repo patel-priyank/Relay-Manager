@@ -78,10 +78,10 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   protected sortOptions = [
     { value: 'description-asc', label: 'Label (A - Z)' },
     { value: 'description-desc', label: 'Label (Z - A)' },
-    { value: 'created-asc', label: 'Created (Newest first)' },
-    { value: 'created-desc', label: 'Created (Oldest first)' },
-    { value: 'last-used-asc', label: 'Last used (Newest first)' },
-    { value: 'last-used-desc', label: 'Last used (Oldest first)' },
+    { value: 'created-desc', label: 'Created (Newest first)' },
+    { value: 'created-asc', label: 'Created (Oldest first)' },
+    { value: 'last-used-desc', label: 'Last used (Newest first)' },
+    { value: 'last-used-asc', label: 'Last used (Oldest first)' },
   ];
 
   protected filterOptions = signal([
@@ -301,16 +301,16 @@ export class Dashboard implements AfterViewInit, OnDestroy {
             b.full_address.toLowerCase().localeCompare(a.full_address.toLowerCase())
           );
 
-        case 'created-asc':
+        case 'created-desc':
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
 
-        case 'created-desc':
+        case 'created-asc':
           return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
 
-        case 'last-used-asc':
+        case 'last-used-desc':
           return new Date(b.last_used_at ?? 0).getTime() - new Date(a.last_used_at ?? 0).getTime();
 
-        case 'last-used-desc':
+        case 'last-used-asc':
           return new Date(a.last_used_at ?? 0).getTime() - new Date(b.last_used_at ?? 0).getTime();
       }
     });
