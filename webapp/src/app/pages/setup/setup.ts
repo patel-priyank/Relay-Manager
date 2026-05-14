@@ -11,6 +11,8 @@ import { PasswordModule } from 'primeng/password';
 
 import { Message } from '../../services/message';
 
+import { API_KEY_STORAGE_KEY } from '../../constants';
+
 @Component({
   selector: 'app-setup',
   imports: [AvatarModule, ButtonModule, CardModule, FormsModule, MessageModule, PasswordModule],
@@ -38,7 +40,7 @@ export class Setup {
         next: (_res: any) => {
           this.isConnecting.set(false);
 
-          localStorage.setItem('relay-manager-api-key', this.apiKey());
+          localStorage.setItem(API_KEY_STORAGE_KEY, this.apiKey());
 
           this.router.navigate(['/dashboard'], { replaceUrl: true });
         },

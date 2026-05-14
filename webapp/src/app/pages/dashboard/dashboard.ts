@@ -34,6 +34,8 @@ import { AliasCard } from '../../components/alias-card/alias-card';
 
 import { Message } from '../../services/message';
 
+import { API_KEY_STORAGE_KEY } from '../../constants';
+
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -158,7 +160,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   }
 
   private loadData() {
-    const apiKey = localStorage.getItem('relay-manager-api-key');
+    const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
 
     this.data.set(null);
     this.aliases.set([]);
@@ -214,7 +216,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   };
 
   protected disconnect() {
-    localStorage.removeItem('relay-manager-api-key');
+    localStorage.removeItem(API_KEY_STORAGE_KEY);
 
     this.router.navigate(['/'], { replaceUrl: true });
   }
@@ -377,7 +379,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const apiKey = localStorage.getItem('relay-manager-api-key');
+    const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
 
     if (!apiKey) return;
 
@@ -459,7 +461,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
   protected confirmDeleteAlias() {
     const alias = this.aliasToDelete();
-    const apiKey = localStorage.getItem('relay-manager-api-key');
+    const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
 
     if (!alias) return;
     if (!apiKey) return;

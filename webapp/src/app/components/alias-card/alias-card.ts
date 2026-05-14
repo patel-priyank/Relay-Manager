@@ -23,6 +23,8 @@ import { TagModule } from 'primeng/tag';
 
 import { Message } from '../../services/message';
 
+import { API_KEY_STORAGE_KEY } from '../../constants';
+
 @Component({
   selector: 'app-alias-card',
   imports: [
@@ -118,7 +120,7 @@ export class AliasCard {
   }
 
   protected updateAliasLabel() {
-    const apiKey = localStorage.getItem('relay-manager-api-key');
+    const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
 
     if (!this.alias()) return;
     if (!apiKey) return;
@@ -195,7 +197,7 @@ export class AliasCard {
       return;
     }
 
-    const apiKey = localStorage.getItem('relay-manager-api-key');
+    const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
 
     if (!this.alias()) return;
     if (!apiKey) return;
