@@ -12,7 +12,7 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response): void => {
+app.get('/', (_req: Request, res: Response): void => {
   res.json({ msg: 'API working.' });
 });
 
