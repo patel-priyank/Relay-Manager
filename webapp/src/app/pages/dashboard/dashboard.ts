@@ -158,13 +158,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   }
 
   private loadData() {
-    const savedApiKey = localStorage.getItem('relay-manager-api-key');
-
-    if (!savedApiKey) {
-      this.router.navigate(['/'], { replaceUrl: true });
-
-      return;
-    }
+    const apiKey = localStorage.getItem('relay-manager-api-key');
 
     this.data.set(null);
     this.aliases.set([]);
@@ -173,20 +167,20 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
     this.http
       .get('/api/account/user', {
-        headers: { Authorization: `Token ${savedApiKey}` },
+        headers: { Authorization: `Token ${apiKey}` },
       })
       .pipe(
         switchMap((res: any) => {
           return forkJoin({
             user: of(res),
             profile: this.http.get('/api/account/profile', {
-              headers: { Authorization: `Token ${savedApiKey}` },
+              headers: { Authorization: `Token ${apiKey}` },
             }),
             random: this.http.get('/api/random', {
-              headers: { Authorization: `Token ${savedApiKey}` },
+              headers: { Authorization: `Token ${apiKey}` },
             }),
             domain: this.http.get('/api/domain', {
-              headers: { Authorization: `Token ${savedApiKey}` },
+              headers: { Authorization: `Token ${apiKey}` },
             }),
           });
         }),
