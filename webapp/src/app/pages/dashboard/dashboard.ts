@@ -434,7 +434,13 @@ export class Dashboard implements AfterViewInit, OnDestroy {
           this.isCreatingAlias.set(false);
           this.isCreateAliasDialogVisible.set(false);
 
-          this.message.showMessage('success', 'Success', `Alias ${res.alias.full_address} created`);
+          navigator.clipboard.writeText(res.alias.full_address);
+
+          this.message.showMessage(
+            'success',
+            'Success',
+            `Alias ${res.alias.full_address} created and copied to clipboard`,
+          );
         },
         error: (_err: HttpErrorResponse) => {
           this.isCreatingAlias.set(false);
