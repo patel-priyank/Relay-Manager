@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   ElementRef,
+  HostListener,
   inject,
   OnDestroy,
   signal,
@@ -138,6 +139,11 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     customAliasLabel: '',
   };
 
+  protected headerHeight = signal(0);
+  protected showScrollToTop = signal(false);
+
+  private resizeObserver: ResizeObserver | null = null;
+
   private dashboardEl = inject(ElementRef);
   private http = inject(HttpClient);
   private message = inject(Message);
@@ -149,10 +155,27 @@ export class Dashboard implements AfterViewInit, OnDestroy {
       .setAttribute('inputmode', 'none');
 
     document.addEventListener('visibilitychange', this.onVisibilityChange);
+
+    const headerEl = document.querySelector('.header') as HTMLElement;
+
+    if (headerEl) {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.headerHeight.set(headerEl.getBoundingClientRect().height);
+      });
+
+      this.resizeObserver.observe(headerEl);
+    }
   }
 
   ngOnDestroy() {
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
+
+    this.resizeObserver?.disconnect();
+  }
+
+  @HostListener('window:scroll')
+  protected onWindowScroll() {
+    this.showScrollToTop.set(window.scrollY > 200);
   }
 
   constructor() {
@@ -330,6 +353,10 @@ export class Dashboard implements AfterViewInit, OnDestroy {
         return typeMatch && blockingMatch && searchMatch;
       }),
     );
+  }
+
+  protected scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   protected openCreateAliasDialog() {

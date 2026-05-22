@@ -246,6 +246,19 @@
   </div>
 </div>
 
+@if (showScrollToTop()) {
+  <p-button
+    icon="ph ph-arrow-up"
+    label="Scroll to top"
+    severity="contrast"
+    raised
+    size="small"
+    class="fixed z-995 left-1/2 -translate-x-1/2 top-[var(--scroll-btn-top)]"
+    [style.--scroll-btn-top]="'calc(' + headerHeight() + 'px + 16px)'"
+    (click)="scrollToTop()"
+  />
+}
+
 @if (data()) {
   <p-button
     label="Create alias"
