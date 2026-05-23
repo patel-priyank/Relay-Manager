@@ -290,6 +290,15 @@
       </div>
 
       <div class="flex flex-col gap-0.5">
+        @let subdomain = data().profile.subdomain;
+
+        <span>Relay Email Domain</span>
+        <span class="break-all {{ subdomain ? 'font-medium' : 'text-current/50 italic' }}">
+          {{ subdomain ? subdomain + '.mozmail.com' : 'Not available' }}
+        </span>
+      </div>
+
+      <div class="flex flex-col gap-0.5">
         <span>API Key</span>
         <span class="break-all font-medium">{{ data().profile.api_token }}</span>
       </div>
