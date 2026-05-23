@@ -253,10 +253,10 @@
   severity="contrast"
   raised
   size="small"
-  class="fixed z-995 left-1/2 -translate-x-1/2 top-[var(--scroll-btn-top)] transition-opacity"
+  class="fixed z-995 left-1/2 -translate-x-1/2 top-[var(--top)] transition-[opacity,top]"
   [class.opacity-0]="!showScrollToTop()"
   [class.pointer-events-none]="!showScrollToTop()"
-  [style.--scroll-btn-top]="'calc(' + headerHeight() + 'px + 16px)'"
+  [style.--top]="'calc(' + headerHeight() + 'px + ' + (showScrollToTop() ? '16px' : '0px') + ')'"
   (click)="scrollToTop()"
 />
 
@@ -264,9 +264,10 @@
   label="Create alias"
   raised
   size="large"
-  class="fixed bottom-4 right-4 z-995 transition-opacity"
+  class="fixed bottom-[var(--bottom)] right-4 z-995 transition-[opacity,bottom]"
   [class.opacity-0]="!data()"
   [class.pointer-events-none]="!data()"
+  [style.--bottom]="'calc(' + (data() ? '16px' : '0px') + ')'"
   (click)="openCreateAliasDialog()"
 />
 
