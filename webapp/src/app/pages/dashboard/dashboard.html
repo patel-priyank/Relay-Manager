@@ -247,28 +247,28 @@
   </div>
 </div>
 
-@if (showScrollToTop()) {
-  <p-button
-    icon="ph ph-arrow-up"
-    label="Scroll to top"
-    severity="contrast"
-    raised
-    size="small"
-    class="fixed z-995 left-1/2 -translate-x-1/2 top-[var(--scroll-btn-top)]"
-    [style.--scroll-btn-top]="'calc(' + headerHeight() + 'px + 16px)'"
-    (click)="scrollToTop()"
-  />
-}
+<p-button
+  icon="ph ph-arrow-up"
+  label="Scroll to top"
+  severity="contrast"
+  raised
+  size="small"
+  class="fixed z-995 left-1/2 -translate-x-1/2 top-[var(--scroll-btn-top)] transition-opacity"
+  [class.opacity-0]="!showScrollToTop()"
+  [class.pointer-events-none]="!showScrollToTop()"
+  [style.--scroll-btn-top]="'calc(' + headerHeight() + 'px + 16px)'"
+  (click)="scrollToTop()"
+/>
 
-@if (data()) {
-  <p-button
-    label="Create alias"
-    raised
-    size="large"
-    class="fixed bottom-4 right-4 z-995"
-    (click)="openCreateAliasDialog()"
-  />
-}
+<p-button
+  label="Create alias"
+  raised
+  size="large"
+  class="fixed bottom-4 right-4 z-995 transition-opacity"
+  [class.opacity-0]="!data()"
+  [class.pointer-events-none]="!data()"
+  (click)="openCreateAliasDialog()"
+/>
 
 @if (data()) {
   <p-dialog
