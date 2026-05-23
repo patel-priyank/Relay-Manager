@@ -151,13 +151,11 @@
       </div>
 
       <div class="flex flex-col gap-0.5">
+        @let blockingLevelItem = blockingLevels().find(level => level.value === blockingLevel());
+
         <span>Blocking level</span>
-        <span class="break-all font-medium">
-          {{ blockingLevels().find(level => level.value === blockingLevel())?.longLabel }}
-        </span>
-        <span class="text-sm text-current/50">
-          {{ blockingLevels().find(level => level.value === blockingLevel())?.description }}
-        </span>
+        <span class="break-all font-medium">{{ blockingLevelItem?.longLabel }}</span>
+        <span class="text-sm text-current/50">{{ blockingLevelItem?.description }}</span>
       </div>
 
       <div class="mt-4 flex flex-col gap-1">
@@ -187,9 +185,11 @@
         </div>
 
         <div class="flex items-center justify-between gap-4">
+          @let lastUsedAt = alias().last_used_at;
+
           <span>Last used</span>
-          <span class="{{ alias().last_used_at ? 'font-medium' : 'text-current/50 italic' }}">
-            {{ alias().last_used_at ? (alias().last_used_at | date: 'dd MMM yyyy') : 'Never' }}
+          <span class="{{ lastUsedAt ? 'font-medium' : 'text-current/50 italic' }}">
+            {{ lastUsedAt ? (lastUsedAt | date: 'dd MMM yyyy') : 'Never' }}
           </span>
         </div>
       </div>

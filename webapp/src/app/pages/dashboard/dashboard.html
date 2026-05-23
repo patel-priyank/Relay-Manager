@@ -150,12 +150,13 @@
         </div>
 
         <div class="flex flex-col gap-1 flex-1 md:w-[240px]">
+          @let allFilterValues =
+            filterOptions().map((option) => option.items.map((item) => item.value)).flat();
+
           <div class="text-current/50 text-sm px-2 flex items-center gap-1">
             <span>Filters</span>
 
-            @if (
-              filterOptions().map((option) => option.items.map((item) => item.value)).flat().length !== filterValue().length
-            ) {
+            @if (allFilterValues.length !== filterValue().length) {
               <div class="w-2 h-2 rounded-full bg-(--p-primary-color)"></div>
             }
           </div>
@@ -179,7 +180,7 @@
                   label="Reset"
                   text
                   size="small"
-                  [disabled]="filterOptions().map((option) => option.items.map((item) => item.value)).flat().length === filterValue().length"
+                  [disabled]="allFilterValues.length === filterValue().length"
                   (click)="onResetFilters()"
                 />
               </div>
