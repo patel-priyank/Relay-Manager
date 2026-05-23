@@ -295,7 +295,7 @@
 
         <span>Relay Email Domain</span>
         <span class="break-all {{ subdomain ? 'font-medium' : 'text-current/50 italic' }}">
-          {{ subdomain ? subdomain + '.mozmail.com' : 'Not available' }}
+          {{ subdomain ? subdomain + '.mozmail.com' : 'No email domain' }}
         </span>
       </div>
 
@@ -444,44 +444,54 @@
 
           <p-tabpanel value="domain">
             @if (data().profile.has_premium) {
-              <div class="flex flex-col gap-4">
-                <div class="flex flex-col gap-2">
+              @if (data().profile.subdomain) {
+                <div class="flex flex-col gap-4">
+                  <div class="flex flex-col gap-2">
+                    <p-floatlabel variant="in">
+                      <input
+                        pInputText
+                        id="custom-alias-address"
+                        name="customAliasAddress"
+                        [(ngModel)]="createAliasForm.customAliasAddress"
+                        autocomplete="off"
+                        fluid
+                        #customAliasAddress="ngModel"
+                        [invalid]="customAliasAddress.invalid && customAliasAddress.touched"
+                        [disabled]="isCreatingAlias()"
+                        required
+                      />
+                      <label for="custom-alias-address">Address</label>
+                    </p-floatlabel>
+
+                    @if (customAliasAddress.invalid && customAliasAddress.touched) {
+                      <p-message severity="error" size="small" variant="simple" class="px-2">
+                        Address is required.
+                      </p-message>
+                    }
+                  </div>
+
                   <p-floatlabel variant="in">
                     <input
                       pInputText
-                      id="custom-alias-address"
-                      name="customAliasAddress"
-                      [(ngModel)]="createAliasForm.customAliasAddress"
+                      id="custom-alias-label"
+                      name="customAliasLabel"
+                      [(ngModel)]="createAliasForm.customAliasLabel"
+                      [disabled]="isCreatingAlias()"
                       autocomplete="off"
                       fluid
-                      #customAliasAddress="ngModel"
-                      [invalid]="customAliasAddress.invalid && customAliasAddress.touched"
-                      [disabled]="isCreatingAlias()"
-                      required
                     />
-                    <label for="custom-alias-address">Address</label>
+                    <label for="custom-alias-label">Label</label>
                   </p-floatlabel>
-
-                  @if (customAliasAddress.invalid && customAliasAddress.touched) {
-                    <p-message severity="error" size="small" variant="simple" class="px-2">
-                      Address is required.
-                    </p-message>
-                  }
                 </div>
+              } @else {
+                <div class="flex flex-col items-center gap-4 text-current/50">
+                  <i class="ph ph-warning text-5xl"></i>
 
-                <p-floatlabel variant="in">
-                  <input
-                    pInputText
-                    id="custom-alias-label"
-                    name="customAliasLabel"
-                    [(ngModel)]="createAliasForm.customAliasLabel"
-                    [disabled]="isCreatingAlias()"
-                    autocomplete="off"
-                    fluid
-                  />
-                  <label for="custom-alias-label">Label</label>
-                </p-floatlabel>
-              </div>
+                  <span class="text-center text-balance">
+                    Custom aliases are only available after setting a subdomain.
+                  </span>
+                </div>
+              }
             } @else {
               <div class="flex flex-col items-center gap-4 text-current/50">
                 <i class="ph ph-warning text-5xl"></i>
