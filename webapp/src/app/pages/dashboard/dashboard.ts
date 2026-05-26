@@ -398,7 +398,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
       this.isCreateAliasDialogVisible.set(false);
       this.haptics.trigger('warning');
 
-      this.message.showMessage('error', 'Error', 'Alias limit reached');
+      this.message.showMessage('warn', 'Warning', 'Alias limit reached');
 
       return;
     }
@@ -408,8 +408,8 @@ export class Dashboard implements AfterViewInit, OnDestroy {
       this.haptics.trigger('warning');
 
       this.message.showMessage(
-        'error',
-        'Error',
+        'warn',
+        'Warning',
         'Custom aliases are only available for Relay Premium subscribers',
       );
 

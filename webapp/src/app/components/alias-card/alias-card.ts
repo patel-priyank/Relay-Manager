@@ -196,8 +196,8 @@ export class AliasCard {
       this.haptics.trigger('warning');
 
       this.message.showMessage(
-        'error',
-        'Error',
+        'warn',
+        'Warning',
         'Promotions blocking level is only available for Relay Premium subscribers',
       );
 
