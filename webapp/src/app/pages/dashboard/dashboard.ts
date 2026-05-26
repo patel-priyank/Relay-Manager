@@ -225,7 +225,11 @@ export class Dashboard implements AfterViewInit, OnDestroy {
         error: (err: HttpErrorResponse) => {
           this.disconnect();
 
-          this.message.showMessage('error', 'Error', err.error.error || 'Something went wrong');
+          this.message.showMessage(
+            'error',
+            'Login failed',
+            err.error.error || 'Something went wrong',
+          );
         },
       });
   }
@@ -398,7 +402,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
       this.isCreateAliasDialogVisible.set(false);
       this.haptics.trigger('warning');
 
-      this.message.showMessage('warn', 'Warning', 'Alias limit reached');
+      this.message.showMessage('warn', 'Limit reached', 'Alias limit reached');
 
       return;
     }
@@ -409,7 +413,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
       this.message.showMessage(
         'warn',
-        'Warning',
+        'Premium only',
         'Custom aliases are only available for Relay Premium subscribers',
       );
 
@@ -426,7 +430,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
       this.message.showMessage(
         'warn',
-        'Warning',
+        'No subdomain',
         'Custom aliases are only available after setting a subdomain',
       );
 
@@ -489,14 +493,18 @@ export class Dashboard implements AfterViewInit, OnDestroy {
           this.isCreateAliasDialogVisible.set(false);
           this.haptics.trigger('success');
 
-          this.message.showMessage('success', 'Success', `Alias ${res.alias.full_address} created`);
+          this.message.showMessage(
+            'success',
+            'Alias created',
+            `Alias ${res.alias.full_address} created`,
+          );
         },
         error: (_err: HttpErrorResponse) => {
           this.isCreatingAlias.set(false);
           this.isCreateAliasDialogVisible.set(false);
           this.haptics.trigger('error');
 
-          this.message.showMessage('error', 'Error', 'Alias could not be created');
+          this.message.showMessage('error', 'Create failed', 'Alias could not be created');
         },
       });
   }
@@ -565,7 +573,11 @@ export class Dashboard implements AfterViewInit, OnDestroy {
           this.isDeleteAliasDialogVisible.set(false);
           this.haptics.trigger('heavy');
 
-          this.message.showMessage('success', 'Success', `Alias ${alias.full_address} deleted`);
+          this.message.showMessage(
+            'success',
+            'Alias deleted',
+            `Alias ${alias.full_address} deleted`,
+          );
         },
         error: (_err: HttpErrorResponse) => {
           this.isDeletingAlias.set(false);
@@ -573,7 +585,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
           this.message.showMessage(
             'error',
-            'Error',
+            'Delete failed',
             `Alias ${alias.full_address} could not be deleted`,
           );
         },

@@ -51,7 +51,11 @@ export class Setup {
           this.isConnecting.set(false);
           this.haptics.trigger('error');
 
-          this.message.showMessage('error', 'Error', err.error.error || 'Something went wrong');
+          this.message.showMessage(
+            'error',
+            'Login failed',
+            err.error.error || 'Something went wrong',
+          );
         },
       });
   }

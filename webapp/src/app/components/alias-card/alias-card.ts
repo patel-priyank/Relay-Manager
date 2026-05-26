@@ -163,7 +163,7 @@ export class AliasCard {
 
           this.message.showMessage(
             'success',
-            'Success',
+            'Label saved',
             `Label updated for ${this.alias().full_address}`,
           );
         },
@@ -173,7 +173,7 @@ export class AliasCard {
 
           this.message.showMessage(
             'error',
-            'Error',
+            'Update failed',
             `Label could not be updated for ${this.alias().full_address}`,
           );
         },
@@ -184,7 +184,7 @@ export class AliasCard {
     navigator.clipboard.writeText(this.alias().full_address);
     this.haptics.trigger('medium');
 
-    this.message.showMessage('success', 'Success', 'Copied alias address to clipboard');
+    this.message.showMessage('success', 'Copied', 'Copied alias address to clipboard');
   }
 
   protected updateBlockingLevel(blockingLevel: string) {
@@ -197,7 +197,7 @@ export class AliasCard {
 
       this.message.showMessage(
         'warn',
-        'Warning',
+        'Premium only',
         'Promotions blocking level is only available for Relay Premium subscribers',
       );
 
@@ -256,7 +256,7 @@ export class AliasCard {
 
           this.message.showMessage(
             'success',
-            'Success',
+            'Blocking level saved',
             `Blocking level updated for ${this.alias().full_address}`,
           );
         },
@@ -268,7 +268,7 @@ export class AliasCard {
 
           this.message.showMessage(
             'error',
-            'Error',
+            'Update failed',
             `Blocking level could not be updated for ${this.alias().full_address}`,
           );
         },
