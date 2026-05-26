@@ -21,6 +21,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 
+import { Haptics } from '../../services/haptics';
 import { Message } from '../../services/message';
 
 import { API_KEY_STORAGE_KEY } from '../../constants';
@@ -84,6 +85,7 @@ export class AliasCard {
   protected blockingLevel = signal<string | undefined>(undefined);
   protected isSavingBlockingLevel = signal<boolean>(false);
 
+  private haptics = inject(Haptics);
   private http = inject(HttpClient);
   private message = inject(Message);
 
@@ -155,6 +157,7 @@ export class AliasCard {
         next: (res: any) => {
           this.isSavingAliasLabel.set(false);
           this.isAliasLabelEditable.set(false);
+          this.haptics.trigger('success');
 
           this.onUpdateAlias.emit(res);
 
@@ -166,6 +169,7 @@ export class AliasCard {
         },
         error: (_err: HttpErrorResponse) => {
           this.isSavingAliasLabel.set(false);
+          this.haptics.trigger('error');
 
           this.message.showMessage(
             'error',
@@ -178,6 +182,7 @@ export class AliasCard {
 
   protected copyAddress() {
     navigator.clipboard.writeText(this.alias().full_address);
+    this.haptics.trigger('medium');
 
     this.message.showMessage('success', 'Success', 'Copied alias address to clipboard');
   }
@@ -187,6 +192,8 @@ export class AliasCard {
       this.blockingLevel.set(blockingLevel);
 
       setTimeout(() => this.setBlockingLevel());
+
+      this.haptics.trigger('warning');
 
       this.message.showMessage(
         'error',
@@ -243,6 +250,7 @@ export class AliasCard {
       .subscribe({
         next: (res: any) => {
           this.isSavingBlockingLevel.set(false);
+          this.haptics.trigger('soft');
 
           this.onUpdateAlias.emit(res);
 
@@ -254,6 +262,7 @@ export class AliasCard {
         },
         error: (_err: HttpErrorResponse) => {
           this.isSavingBlockingLevel.set(false);
+          this.haptics.trigger('error');
 
           this.setBlockingLevel();
 

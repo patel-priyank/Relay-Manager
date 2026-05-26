@@ -33,6 +33,7 @@ import { TagModule } from 'primeng/tag';
 
 import { AliasCard } from '../../components/alias-card/alias-card';
 
+import { Haptics } from '../../services/haptics';
 import { Message } from '../../services/message';
 
 import { API_KEY_STORAGE_KEY } from '../../constants';
@@ -145,6 +146,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   private resizeObserver: ResizeObserver | null = null;
 
   private dashboardEl = inject(ElementRef);
+  private haptics = inject(Haptics);
   private http = inject(HttpClient);
   private message = inject(Message);
   private router = inject(Router);
@@ -239,12 +241,16 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   };
 
   protected disconnect() {
+    this.haptics.trigger('rigid');
+
     localStorage.removeItem(API_KEY_STORAGE_KEY);
 
     this.router.navigate(['/'], { replaceUrl: true });
   }
 
   protected refresh() {
+    this.haptics.trigger('selection');
+
     this.loadData();
   }
 
@@ -356,6 +362,8 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   }
 
   protected scrollToTop() {
+    this.haptics.trigger('light');
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -388,6 +396,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
     if (tabValue === 'random' && this.data().profile.at_mask_limit) {
       this.isCreateAliasDialogVisible.set(false);
+      this.haptics.trigger('warning');
 
       this.message.showMessage('error', 'Error', 'Alias limit reached');
 
@@ -396,6 +405,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
     if (tabValue === 'domain' && !this.data().profile.has_premium) {
       this.isCreateAliasDialogVisible.set(false);
+      this.haptics.trigger('warning');
 
       this.message.showMessage(
         'error',
@@ -460,12 +470,14 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
           this.isCreatingAlias.set(false);
           this.isCreateAliasDialogVisible.set(false);
+          this.haptics.trigger('success');
 
           this.message.showMessage('success', 'Success', `Alias ${res.alias.full_address} created`);
         },
         error: (_err: HttpErrorResponse) => {
           this.isCreatingAlias.set(false);
           this.isCreateAliasDialogVisible.set(false);
+          this.haptics.trigger('error');
 
           this.message.showMessage('error', 'Error', 'Alias could not be created');
         },
@@ -534,11 +546,13 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
           this.isDeletingAlias.set(false);
           this.isDeleteAliasDialogVisible.set(false);
+          this.haptics.trigger('heavy');
 
           this.message.showMessage('success', 'Success', `Alias ${alias.full_address} deleted`);
         },
         error: (_err: HttpErrorResponse) => {
           this.isDeletingAlias.set(false);
+          this.haptics.trigger('error');
 
           this.message.showMessage(
             'error',

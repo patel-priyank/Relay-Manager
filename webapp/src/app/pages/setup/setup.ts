@@ -9,6 +9,7 @@ import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
 import { PasswordModule } from 'primeng/password';
 
+import { Haptics } from '../../services/haptics';
 import { Message } from '../../services/message';
 
 import { API_KEY_STORAGE_KEY } from '../../constants';
@@ -23,6 +24,7 @@ export class Setup {
   protected apiKey = signal('');
   protected isConnecting = signal(false);
 
+  private haptics = inject(Haptics);
   private http = inject(HttpClient);
   private message = inject(Message);
   private router = inject(Router);
@@ -39,6 +41,7 @@ export class Setup {
       .subscribe({
         next: (_res: any) => {
           this.isConnecting.set(false);
+          this.haptics.trigger('success');
 
           localStorage.setItem(API_KEY_STORAGE_KEY, this.apiKey());
 
@@ -46,6 +49,7 @@ export class Setup {
         },
         error: (err: HttpErrorResponse) => {
           this.isConnecting.set(false);
+          this.haptics.trigger('error');
 
           this.message.showMessage('error', 'Error', err.error.error || 'Something went wrong');
         },
