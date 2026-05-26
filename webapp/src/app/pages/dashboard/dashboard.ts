@@ -240,18 +240,18 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     }
   };
 
+  protected refresh() {
+    this.haptics.trigger('selection');
+
+    this.loadData();
+  }
+
   protected disconnect() {
     this.haptics.trigger('rigid');
 
     localStorage.removeItem(API_KEY_STORAGE_KEY);
 
     this.router.navigate(['/'], { replaceUrl: true });
-  }
-
-  protected refresh() {
-    this.haptics.trigger('selection');
-
-    this.loadData();
   }
 
   protected onSearchChange(query: string) {
@@ -411,6 +411,23 @@ export class Dashboard implements AfterViewInit, OnDestroy {
         'warn',
         'Warning',
         'Custom aliases are only available for Relay Premium subscribers',
+      );
+
+      return;
+    }
+
+    if (
+      tabValue === 'domain' &&
+      this.data().profile.has_premium &&
+      !this.data().profile.subdomain
+    ) {
+      this.isCreateAliasDialogVisible.set(false);
+      this.haptics.trigger('warning');
+
+      this.message.showMessage(
+        'warn',
+        'Warning',
+        'Custom aliases are only available after setting a subdomain',
       );
 
       return;
