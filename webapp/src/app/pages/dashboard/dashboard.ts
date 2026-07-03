@@ -365,6 +365,25 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     );
   }
 
+  private focusCreateAliasFirstField() {
+    const inputId =
+      this.createAliasTabValue() === 'random' ? 'random-alias-label' : 'custom-alias-address';
+
+    const deadline = performance.now() + 500;
+
+    const tryFocus = () => {
+      const input = document.getElementById(inputId);
+
+      if (input) {
+        input.focus();
+      } else if (performance.now() < deadline) {
+        requestAnimationFrame(tryFocus);
+      }
+    };
+
+    requestAnimationFrame(tryFocus);
+  }
+
   protected scrollToTop() {
     this.haptics.trigger('light');
 
@@ -397,25 +416,6 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     setTimeout(() => this.createAliasFormRef?.resetForm());
 
     this.focusCreateAliasFirstField();
-  }
-
-  protected focusCreateAliasFirstField() {
-    const inputId =
-      this.createAliasTabValue() === 'random' ? 'random-alias-label' : 'custom-alias-address';
-
-    const deadline = performance.now() + 500;
-
-    const tryFocus = () => {
-      const input = document.getElementById(inputId);
-
-      if (input) {
-        input.focus();
-      } else if (performance.now() < deadline) {
-        requestAnimationFrame(tryFocus);
-      }
-    };
-
-    requestAnimationFrame(tryFocus);
   }
 
   protected createAlias(form: NgForm) {
@@ -511,6 +511,8 @@ export class Dashboard implements AfterViewInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           this.data.update((data) => ({ ...data, profile: res.profile[0] }));
+
+          this.onSearchChange(res.alias.full_address);
 
           this.isCreatingAlias.set(false);
           this.isCreateAliasDialogVisible.set(false);
