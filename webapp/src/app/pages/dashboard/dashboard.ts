@@ -383,6 +383,8 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     setTimeout(() => this.createAliasFormRef?.resetForm());
 
     this.isCreateAliasDialogVisible.set(true);
+
+    this.focusCreateAliasFirstField();
   }
 
   protected onCreateAliasTabChange() {
@@ -393,6 +395,27 @@ export class Dashboard implements AfterViewInit, OnDestroy {
     };
 
     setTimeout(() => this.createAliasFormRef?.resetForm());
+
+    this.focusCreateAliasFirstField();
+  }
+
+  protected focusCreateAliasFirstField() {
+    const inputId =
+      this.createAliasTabValue() === 'random' ? 'random-alias-label' : 'custom-alias-address';
+
+    const deadline = performance.now() + 500;
+
+    const tryFocus = () => {
+      const input = document.getElementById(inputId);
+
+      if (input) {
+        input.focus();
+      } else if (performance.now() < deadline) {
+        requestAnimationFrame(tryFocus);
+      }
+    };
+
+    requestAnimationFrame(tryFocus);
   }
 
   protected createAlias(form: NgForm) {
